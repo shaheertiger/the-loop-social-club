@@ -4,8 +4,8 @@ import { Marquee } from "./_components/Marquee";
 import { SignupForm } from "./_components/SignupForm";
 import { site } from "./_lib/site";
 
-// Pre-launch: this coming-soon page is the main public route (plus /welcome-2,
-// a standalone page in public/welcome-2.html linked from the footer).
+// Pre-launch: this coming-soon page is the main public route (plus /welcome-2 and
+// /welcome-3, standalone pages in public/ linked from the footer).
 // The full marketing site lives in app/_website (a private, unroutable folder).
 
 const FEATURES = [
@@ -108,6 +108,9 @@ export default function ComingSoon() {
           </a>
           <a href="/welcome-2" className="text-cream underline hover:text-white">
             Welcome 2
+          </a>
+          <a href="/welcome-3" className="text-cream underline hover:text-white">
+            Welcome 3
           </a>
           {site.instagramUrl && (
             <a href={site.instagramUrl} className="text-cream underline hover:text-white">
