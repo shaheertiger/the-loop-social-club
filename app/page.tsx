@@ -40,11 +40,11 @@ export default function Home() {
           <div className="hidden md:flex gap-10">
             <a href="#home" className="hover:text-[#3b82f6] text-sm font-medium transition-colors drop-shadow-md">Home</a>
             <a href="#offer" className="hover:text-[#3b82f6] text-sm font-medium transition-colors drop-shadow-md">What We Offer</a>
-            <a href="#contact" className="hover:text-[#3b82f6] text-sm font-medium transition-colors drop-shadow-md">Contact</a>
+            <a href="#join" className="hover:text-[#3b82f6] text-sm font-medium transition-colors drop-shadow-md">Contact</a>
           </div>
-          <button className="bg-white text-black px-6 py-2.5 rounded-full text-sm font-semibold hover:bg-[#3b82f6] transition-colors shadow-lg">
+          <a href="#join" className="bg-white text-black px-6 py-2.5 rounded-full text-sm font-semibold hover:bg-[#3b82f6] transition-colors shadow-lg cursor-pointer inline-block">
             Get started 
-          </button>
+          </a>
         </nav>
 
         {/* Form moved to bottom */}
