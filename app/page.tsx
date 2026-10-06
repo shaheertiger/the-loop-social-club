@@ -29,7 +29,7 @@ export default function Home() {
         <nav className="flex justify-between items-center bg-white/10 backdrop-blur-md border border-white/20 rounded-[2rem] px-8 py-4 shadow-2xl">
           <div className="text-xl font-bold tracking-tight text-white flex items-center gap-2">
             <svg className="w-6 h-6 fill-current text-[#ccff00]" viewBox="0 0 24 24"><path d="M4 12l8-8 8 8-8 8z"/></svg>
-            Badmi
+            The Loop
           </div>
           <div className="hidden md:flex gap-10">
             <a href="#" className="hover:text-[#ccff00] text-sm font-medium transition-colors">Home</a>
