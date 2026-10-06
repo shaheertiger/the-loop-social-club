@@ -7,7 +7,7 @@ export default function Home() {
       {/* Background Image & Overlay */}
       <div 
         className="absolute inset-0 bg-cover bg-center opacity-80"
-        style={{ backgroundImage: "url('/hero-bg-2.jpg')" }}
+        style={{ backgroundImage: "url('/custom-bg.jpg')" }}
       />
       {/* Optional darkening overlay so text pops */}
       <div className="absolute inset-0 bg-neutral-900/30 mix-blend-multiply" />
@@ -49,52 +49,7 @@ export default function Home() {
           {/* Left Column */}
           <div className="col-span-1 lg:col-span-4 flex flex-col h-full justify-between z-30 pb-4">
             
-            {/* Intro Widget */}
-            <div className="max-w-xs mt-10">
-              <div className="w-16 h-10 bg-white/10 backdrop-blur-md rounded-full border border-white/20 flex items-center justify-center mb-6 cursor-pointer hover:bg-white/20 transition shadow-lg">
-                <svg className="w-4 h-4 fill-current text-[#ccff00]" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-              </div>
-              <p className="text-neutral-200 text-sm leading-relaxed mb-4 font-medium">
-                Join the fastest-growing sport with energy, skill, and community.
-              </p>
-              <a href="#" className="text-white text-sm font-semibold border-b-2 border-[#ccff00] pb-0.5 hover:text-[#ccff00] transition-colors">
-                Join now &rarr;
-              </a>
-            </div>
-
-            {/* Countdown Card */}
-            <div className="bg-white/10 backdrop-blur-xl border border-white/20 p-6 rounded-3xl shadow-2xl mt-12 w-full max-w-[380px]">
-              <div className="flex justify-between items-center mb-6">
-                <span className="text-[10px] font-semibold text-neutral-300 uppercase tracking-widest">
-                  October 12th, 2026 AT 8:15 AM
-                </span>
-                <button className="bg-[#ccff00] text-black text-[10px] font-bold px-3 py-1.5 rounded-full uppercase tracking-wider hover:bg-white transition-colors">
-                  Register now
-                </button>
-              </div>
-              
-              <div className="flex justify-between items-end px-2">
-                <div className="text-center">
-                  <div className="text-4xl md:text-5xl font-bold font-mono tracking-tighter">12</div>
-                  <div className="text-[9px] text-neutral-400 mt-2 uppercase font-semibold">Days</div>
-                </div>
-                <div className="text-2xl text-neutral-500 mb-5">:</div>
-                <div className="text-center">
-                  <div className="text-4xl md:text-5xl font-bold font-mono tracking-tighter">08</div>
-                  <div className="text-[9px] text-neutral-400 mt-2 uppercase font-semibold">Hours</div>
-                </div>
-                <div className="text-2xl text-neutral-500 mb-5">:</div>
-                <div className="text-center">
-                  <div className="text-4xl md:text-5xl font-bold font-mono tracking-tighter">11</div>
-                  <div className="text-[9px] text-neutral-400 mt-2 uppercase font-semibold">Minutes</div>
-                </div>
-                <div className="text-2xl text-neutral-500 mb-5">:</div>
-                <div className="text-center">
-                  <div className="text-4xl md:text-5xl font-bold font-mono tracking-tighter">09</div>
-                  <div className="text-[9px] text-neutral-400 mt-2 uppercase font-semibold">Seconds</div>
-                </div>
-              </div>
-            </div>
+            {/* Widgets Removed */}
           </div>
 
           {/* Center Spacer */}
@@ -102,24 +57,7 @@ export default function Home() {
 
           {/* Right Column */}
           <div className="col-span-1 lg:col-span-4 flex justify-end items-start z-30 pt-10">
-            {/* Event Card */}
-            <div className="bg-white text-black p-3.5 rounded-[1.5rem] flex gap-4 items-center shadow-2xl w-full max-w-[320px]">
-              <div className="flex-1 pl-2">
-                <h4 className="font-bold text-sm leading-snug mb-3">You're Invited To Our Next Event!</h4>
-                <div className="flex -space-x-2.5">
-                  <img src="https://i.pravatar.cc/100?img=4" className="w-7 h-7 rounded-full border-[1.5px] border-white object-cover" alt="User" />
-                  <img src="https://i.pravatar.cc/100?img=5" className="w-7 h-7 rounded-full border-[1.5px] border-white object-cover" alt="User" />
-                  <img src="https://i.pravatar.cc/100?img=6" className="w-7 h-7 rounded-full border-[1.5px] border-white object-cover" alt="User" />
-                </div>
-              </div>
-              <div className="w-[88px] h-[88px] bg-gradient-to-br from-slate-900 to-slate-800 rounded-xl flex flex-col justify-end p-2.5 text-white relative overflow-hidden">
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(204,255,0,0.3),transparent_70%)]"></div>
-                <div className="relative z-10">
-                  <div className="font-bold text-lg leading-none mb-0.5">25+</div>
-                  <div className="text-[8px] leading-tight opacity-80 uppercase tracking-wide">Live Tournaments</div>
-                </div>
-              </div>
-            </div>
+            {/* Widgets Removed */}
           </div>
 
         </div>
