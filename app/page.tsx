@@ -43,40 +43,7 @@ export default function Home() {
           </button>
         </nav>
 
-        {/* Hero Form Content */}
-        <div className="flex-1 flex flex-col justify-center px-8 max-w-[1600px] mx-auto w-full z-10">
-          <div className="max-w-md bg-neutral-900/40 p-8 rounded-3xl backdrop-blur-md border border-white/10 shadow-2xl">
-            <h2 className="text-4xl md:text-5xl font-bold mb-3 font-['Anton'] tracking-wider uppercase text-white drop-shadow-lg">Join The Waitlist</h2>
-            <p className="text-neutral-200 mb-8 text-[15px] font-medium drop-shadow-md">
-              Ajax's premier indoor sports & social club. Secure your spot before our official launch.
-            </p>
-
-            {/* FormSubmit.co Integration */}
-            <form action="https://formsubmit.co/xgmskl@gmail.com" method="POST" className="flex flex-col gap-4">
-              <input type="hidden" name="_captcha" value="false" />
-              <input type="hidden" name="_subject" value="New Waitlist Signup - The Loop Social Club" />
-              
-              <input 
-                type="text" name="name" placeholder="Full Name" required 
-                className="p-4 rounded-xl bg-white/90 border-none text-black focus:ring-2 focus:ring-[#ccff00] outline-none font-medium" 
-              />
-              <input 
-                type="email" name="email" placeholder="Email Address" required 
-                className="p-4 rounded-xl bg-white/90 border-none text-black focus:ring-2 focus:ring-[#ccff00] outline-none font-medium" 
-              />
-              <input 
-                type="tel" name="phone" placeholder="Phone Number" required 
-                className="p-4 rounded-xl bg-white/90 border-none text-black focus:ring-2 focus:ring-[#ccff00] outline-none font-medium" 
-              />
-              <button 
-                type="submit" 
-                className="bg-[#ccff00] text-black font-bold p-4 rounded-xl mt-2 text-[15px] uppercase tracking-wider hover:bg-white transition-colors shadow-xl"
-              >
-                Join Now
-              </button>
-            </form>
-          </div>
-        </div>
+        {/* Form moved to bottom */}
       </section>
 
       {/* ─── WHAT WE OFFER SECTION ─── */}
@@ -110,6 +77,43 @@ export default function Home() {
               </p>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* ─── WAITLIST FORM SECTION ─── */}
+      <section id="join" className="relative z-10 bg-neutral-900/95 backdrop-blur-3xl py-24 px-8 border-t border-white/10 flex justify-center">
+        <div className="max-w-md w-full bg-white/5 p-10 rounded-[2rem] border border-white/10 shadow-2xl relative overflow-hidden">
+          
+          <div className="absolute top-0 right-0 w-64 h-64 bg-[#ccff00] opacity-10 blur-[100px] rounded-full pointer-events-none"></div>
+
+          <h2 className="text-4xl font-bold mb-3 font-['Anton'] tracking-wider uppercase text-white relative z-10">Join The Waitlist</h2>
+          <p className="text-neutral-300 mb-10 text-[15px] font-medium relative z-10">
+            Secure your spot before our official launch. We'll notify you as soon as memberships open.
+          </p>
+
+          <form action="https://formsubmit.co/xgmskl@gmail.com" method="POST" className="flex flex-col gap-5 relative z-10">
+            <input type="hidden" name="_captcha" value="false" />
+            <input type="hidden" name="_subject" value="New Waitlist Signup - The Loop Social Club" />
+            
+            <input 
+              type="text" name="name" placeholder="Full Name" required 
+              className="p-4 rounded-xl bg-white/90 border-none text-black focus:ring-4 focus:ring-[#ccff00]/50 outline-none font-medium transition-all" 
+            />
+            <input 
+              type="email" name="email" placeholder="Email Address" required 
+              className="p-4 rounded-xl bg-white/90 border-none text-black focus:ring-4 focus:ring-[#ccff00]/50 outline-none font-medium transition-all" 
+            />
+            <input 
+              type="tel" name="phone" placeholder="Phone Number" required 
+              className="p-4 rounded-xl bg-white/90 border-none text-black focus:ring-4 focus:ring-[#ccff00]/50 outline-none font-medium transition-all" 
+            />
+            <button 
+              type="submit" 
+              className="bg-[#ccff00] text-black font-bold p-4 rounded-xl mt-4 text-[16px] uppercase tracking-wider hover:bg-white transition-colors shadow-xl"
+            >
+              Secure My Spot
+            </button>
+          </form>
         </div>
       </section>
 
