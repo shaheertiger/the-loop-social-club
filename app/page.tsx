@@ -8,7 +8,7 @@ export default function Home() {
       <div 
         className="fixed inset-0 bg-cover opacity-80"
         style={{ 
-          backgroundImage: "url('/custom-bg.jpg')",
+          backgroundImage: "url('/bg-v2.jpg')",
           backgroundPosition: "center top"
         }}
       />
