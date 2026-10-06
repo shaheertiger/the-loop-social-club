@@ -1,27 +1,112 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
+/* Loop Social design tokens (see design handoff README). */
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-navy: #273d57;
+  --color-navy-deep: #1b2c40;
+  --color-cream: #f4eee2;
+  --color-sand: #e7dfcf;
+  --color-slate: #4a5d74;
+  --color-mist: #c9d3df;
+  --color-muted: #6b7a8c;
+  --color-line: #c9c2b2;
+  --color-error: #a33a2b;
+  --color-placeholder: #7c8ca0;
+
+  --font-sans: var(--font-figtree), system-ui, sans-serif;
+  --font-display: var(--font-unbounded), sans-serif;
+  --font-serif: var(--font-instrument-serif), serif;
+
+  --breakpoint-nav: 900px;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
 }
-@import url('https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700&display=swap');
+
+a {
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+
+.no-scrollbar {
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+@keyframes ls-draw {
+  from {
+    stroke-dashoffset: 1600;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes ls-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes ls-pop {
+  0% {
+    transform: scale(0.6);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.08);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes ls-fade {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.animate-ls-draw {
+  stroke-dasharray: 1600;
+  animation: ls-draw 2.6s cubic-bezier(0.6, 0, 0.2, 1) both;
+}
+.animate-ls-marquee {
+  animation: ls-marquee 40s linear infinite;
+}
+.animate-ls-pop {
+  animation: ls-pop 0.6s ease-out both;
+}
+.animate-ls-fade {
+  animation: ls-fade 0.25s ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .animate-ls-draw,
+  .animate-ls-marquee,
+  .animate-ls-pop,
+  .animate-ls-fade {
+    animation: none;
+  }
+}
