@@ -2,7 +2,7 @@ import React from 'react';
 
 export default function Home() {
   return (
-    <div className="relative w-full bg-neutral-900 text-white font-sans">
+    <div className="relative w-full bg-neutral-900 text-white font-sans scroll-smooth">
       
       {/* Background Image & Overlay (Fixed) */}
       <div 
@@ -18,23 +18,23 @@ export default function Home() {
       <section className="relative z-10 flex flex-col min-h-screen">
         
         {/* ─── COMING SOON BANNER ─── */}
-        <div className="w-full bg-[#3b82f6] text-black font-bold text-center py-2.5 text-xs md:text-sm uppercase tracking-[0.2em] shadow-md z-30 relative">
+        <div className="w-full bg-[#3b82f6] text-black font-bold text-center py-2 text-xs md:text-sm uppercase tracking-[0.2em] shadow-md z-30 relative px-2">
           🚧 Coming Soon to Ajax! Secure your spot below. 🚧
         </div>
         {/* Giant Overlay Heading (pushed behind the text) */}
         <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none z-[-1] leading-[0.85] opacity-60">
-          <h1 className="font-['Anton'] text-[16vw] tracking-tighter text-white drop-shadow-2xl translate-x-[-8%] uppercase">
+          <h1 className="font-['Anton'] text-[24vw] md:text-[16vw] tracking-tighter text-white drop-shadow-2xl translate-x-[-2%] md:translate-x-[-8%] uppercase">
             Pickleball
           </h1>
-          <h1 className="font-['Anton'] text-[18vw] tracking-tighter text-white drop-shadow-2xl translate-x-[8%] uppercase text-[#f4f4f5]">
+          <h1 className="font-['Anton'] text-[26vw] md:text-[18vw] tracking-tighter text-white drop-shadow-2xl translate-x-[2%] md:translate-x-[8%] uppercase text-[#f4f4f5]">
             Passion
           </h1>
         </div>
 
         {/* Navigation Header (Simple, flat, no glass) */}
-        <nav className="flex justify-between items-center px-8 py-8 w-full max-w-[1600px] mx-auto">
-          <div className="text-2xl font-bold tracking-tight text-white flex items-center gap-2">
-            <svg className="w-6 h-6 fill-current text-[#3b82f6]" viewBox="0 0 24 24"><path d="M4 12l8-8 8 8-8 8z"/></svg>
+        <nav className="flex justify-between items-center px-4 py-6 md:px-8 md:py-8 w-full max-w-[1600px] mx-auto">
+          <div className="text-xl md:text-2xl font-bold tracking-tight text-white flex items-center gap-2">
+            <svg className="w-5 h-5 md:w-6 md:h-6 fill-current text-[#3b82f6]" viewBox="0 0 24 24"><path d="M4 12l8-8 8 8-8 8z"/></svg>
             The Loop
           </div>
           <div className="hidden md:flex gap-10">
@@ -42,7 +42,7 @@ export default function Home() {
             <a href="#offer" className="hover:text-[#3b82f6] text-sm font-medium transition-colors drop-shadow-md">What We Offer</a>
             <a href="#join" className="hover:text-[#3b82f6] text-sm font-medium transition-colors drop-shadow-md">Contact</a>
           </div>
-          <a href="#join" className="bg-white text-black px-6 py-2.5 rounded-full text-sm font-semibold hover:bg-[#3b82f6] transition-colors shadow-lg cursor-pointer inline-block">
+          <a href="#join" className="bg-white text-black px-4 py-2 md:px-6 md:py-2.5 rounded-full text-xs md:text-sm font-semibold hover:bg-[#3b82f6] transition-colors shadow-lg cursor-pointer inline-block">
             Get started 
           </a>
         </nav>
@@ -51,10 +51,10 @@ export default function Home() {
       </section>
 
       {/* ─── WHAT WE OFFER SECTION ─── */}
-      <section id="offer" className="relative z-10 bg-neutral-900/80 backdrop-blur-2xl py-24 px-8 border-t border-white/10">
+      <section id="offer" className="relative z-10 bg-neutral-900/80 backdrop-blur-2xl py-16 px-4 md:py-24 md:px-8 border-t border-white/10">
         <div className="max-w-[1200px] mx-auto">
-          <p className="text-[#3b82f6] font-bold tracking-widest uppercase text-sm mb-4">What We Offer</p>
-          <h2 className="text-4xl md:text-5xl font-['Anton'] uppercase tracking-wider mb-16 text-white">Redefining the indoor club experience.</h2>
+          <p className="text-[#3b82f6] font-bold tracking-widest uppercase text-xs md:text-sm mb-4">What We Offer</p>
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-['Anton'] uppercase tracking-wider mb-12 md:mb-16 text-white leading-tight">Redefining the indoor club experience.</h2>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="bg-white/5 p-8 rounded-[2rem] border border-white/10 hover:bg-white/10 transition-colors shadow-xl">
@@ -103,13 +103,13 @@ export default function Home() {
       </section>
 
       {/* ─── WAITLIST FORM SECTION ─── */}
-      <section id="join" className="relative z-10 bg-neutral-900/95 backdrop-blur-3xl py-24 px-8 border-t border-white/10 flex justify-center">
-        <div className="max-w-md w-full bg-white/5 p-10 rounded-[2rem] border border-white/10 shadow-2xl relative overflow-hidden">
+      <section id="join" className="relative z-10 bg-neutral-900/95 backdrop-blur-3xl py-16 px-4 md:py-24 md:px-8 border-t border-white/10 flex justify-center">
+        <div className="max-w-md w-full bg-white/5 p-6 md:p-10 rounded-2xl md:rounded-[2rem] border border-white/10 shadow-2xl relative overflow-hidden">
           
           <div className="absolute top-0 right-0 w-64 h-64 bg-[#3b82f6] opacity-10 blur-[100px] rounded-full pointer-events-none"></div>
 
-          <h2 className="text-4xl font-bold mb-3 font-['Anton'] tracking-wider uppercase text-white relative z-10">Join The Waitlist</h2>
-          <p className="text-neutral-300 mb-10 text-[15px] font-medium relative z-10">
+          <h2 className="text-3xl md:text-4xl font-bold mb-2 md:mb-3 font-['Anton'] tracking-wider uppercase text-white relative z-10">Join The Waitlist</h2>
+          <p className="text-neutral-300 mb-8 md:mb-10 text-sm md:text-[15px] font-medium relative z-10">
             Secure your spot before our official launch. We'll notify you as soon as memberships open.
           </p>
 
