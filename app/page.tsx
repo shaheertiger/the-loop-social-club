@@ -17,6 +17,10 @@ export default function Home() {
       {/* ─── HERO SECTION ─── */}
       <section className="relative z-10 flex flex-col min-h-screen">
         
+        {/* ─── COMING SOON BANNER ─── */}
+        <div className="w-full bg-[#ccff00] text-black font-bold text-center py-2.5 text-xs md:text-sm uppercase tracking-[0.2em] shadow-md z-30 relative">
+          🚧 Coming Soon to Ajax! Secure your spot below. 🚧
+        </div>
         {/* Giant Overlay Heading (pushed behind the text) */}
         <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none z-[-1] leading-[0.85] opacity-60">
           <h1 className="font-['Anton'] text-[16vw] tracking-tighter text-white drop-shadow-2xl translate-x-[-8%] uppercase">
