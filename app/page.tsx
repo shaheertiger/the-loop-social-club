@@ -2,15 +2,18 @@ import React from 'react';
 
 export default function Home() {
   return (
-    <section className="relative min-h-screen w-full bg-neutral-900 overflow-hidden text-white font-sans">
+    <section className="relative min-h-screen w-full bg-neutral-900 text-white font-sans">
       
       {/* Background Image & Overlay */}
       <div 
-        className="absolute inset-0 bg-cover bg-center opacity-80"
-        style={{ backgroundImage: "url('/custom-bg.jpg')" }}
+        className="fixed inset-0 bg-cover opacity-80"
+        style={{ 
+          backgroundImage: "url('/custom-bg.jpg')",
+          backgroundPosition: "center top" // Adjusts the focal point downward
+        }}
       />
       {/* Optional darkening overlay so text pops */}
-      <div className="absolute inset-0 bg-neutral-900/30 mix-blend-multiply" />
+      <div className="fixed inset-0 bg-neutral-900/30 mix-blend-multiply" />
       
       {/* Giant Overlay Heading (PICKLEBALL PASSION) */}
       <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none z-10 leading-[0.85]">
