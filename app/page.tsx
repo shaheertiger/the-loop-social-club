@@ -1,144 +1,117 @@
-import React from 'react';
+import { Logo } from "./_components/Logo";
+import { LoopArt } from "./_components/LoopArt";
+import { Marquee } from "./_components/Marquee";
+import { SignupForm } from "./_components/SignupForm";
+import { site } from "./_lib/site";
 
-export default function Home() {
+// Pre-launch: this coming-soon page is the only public route.
+// The full marketing site lives in app/_website (a private, unroutable folder).
+
+const FEATURES = [
+  { n: "01", title: "Pickleball", body: "Indoor courts, open play and leagues, all year round." },
+  { n: "02", title: "Cricket", body: "Practice nets for batting, bowling and team training." },
+  { n: "03", title: "Café", body: "Good coffee and a warm seat between games.", filled: true },
+];
+
+const gutter = "px-[clamp(20px,5vw,56px)]";
+
+export default function ComingSoon() {
   return (
-    <div className="relative w-full bg-neutral-900 text-white font-sans scroll-smooth">
-      
-      {/* Background Image & Overlay (Fixed) */}
-      <div 
-        className="fixed inset-0 bg-cover opacity-80"
-        style={{ 
-          backgroundImage: "url('/bg-v2.jpg')",
-          backgroundPosition: "center top"
-        }}
-      />
-      <div className="fixed inset-0 bg-neutral-900/30 mix-blend-multiply" />
-      
-      {/* ─── HERO SECTION ─── */}
-      <section className="relative z-10 flex flex-col min-h-screen">
-        
-        {/* ─── COMING SOON BANNER ─── */}
-        <div className="w-full bg-[#3b82f6] text-black font-bold text-center py-2 text-xs md:text-sm uppercase tracking-[0.2em] shadow-md z-30 relative px-2">
-          🚧 Coming Soon to Ajax! Secure your spot below. 🚧
+    <div className="flex min-h-svh flex-col overflow-x-hidden bg-navy font-sans text-cream">
+      <header
+        className={`mx-auto flex w-full max-w-[1320px] items-center justify-between gap-4 py-5 ${gutter}`}
+      >
+        <Logo tone="cream" priority className="block h-[clamp(40px,7vw,56px)] w-auto" />
+        <div className="flex items-center gap-2 rounded-full border-[1.5px] border-cream/35 px-3.5 py-[9px] font-display text-[11px] leading-none font-semibold tracking-[0.12em] whitespace-nowrap">
+          <span className="size-[7px] rounded-full bg-cream" />
+          AJAX, ON
         </div>
-        {/* Giant Overlay Heading (pushed behind the text) */}
-        <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none z-[-1] leading-[0.85] opacity-60">
-          <h1 className="font-['Anton'] text-[15vw] md:text-[16vw] tracking-tighter text-white drop-shadow-2xl translate-x-[-2%] md:translate-x-[-8%] uppercase">
-            Pickleball
-          </h1>
-          <h1 className="font-['Anton'] text-[17vw] md:text-[18vw] tracking-tighter text-white drop-shadow-2xl translate-x-[2%] md:translate-x-[8%] uppercase text-[#f4f4f5]">
-            Passion
-          </h1>
-        </div>
+      </header>
 
-        {/* Navigation Header (Simple, flat, no glass) */}
-        <nav className="flex justify-between items-center px-4 py-6 md:px-8 md:py-8 w-full max-w-[1600px] mx-auto">
-          <div className="text-xl md:text-2xl font-bold tracking-tight text-white flex items-center gap-2">
-            <svg className="w-5 h-5 md:w-6 md:h-6 fill-current text-[#3b82f6]" viewBox="0 0 24 24"><path d="M4 12l8-8 8 8-8 8z"/></svg>
-            The Loop
+      <main
+        className={`mx-auto flex w-full max-w-[1320px] flex-1 flex-wrap items-center gap-[clamp(28px,5vw,72px)] pt-[clamp(8px,3vw,40px)] pb-[clamp(40px,6vw,80px)] ${gutter}`}
+      >
+        <section className="relative min-w-0 flex-[1_1_440px]">
+          <div className="pointer-events-none absolute top-[6%] right-[-30%] left-[10%] h-[72%]">
+            <LoopArt />
           </div>
-          <div className="hidden md:flex gap-10">
-            <a href="#home" className="hover:text-[#3b82f6] text-sm font-medium transition-colors drop-shadow-md">Home</a>
-            <a href="#offer" className="hover:text-[#3b82f6] text-sm font-medium transition-colors drop-shadow-md">What We Offer</a>
-            <a href="#join" className="hover:text-[#3b82f6] text-sm font-medium transition-colors drop-shadow-md">Contact</a>
+          <div className="relative">
+            <p className="mb-[22px] font-display text-[11px] leading-[1.4] font-semibold tracking-[0.22em] text-mist">
+              OPENING SOON IN AJAX, ONTARIO
+            </p>
+            <h1 className="font-display text-[clamp(56px,13vw,132px)] leading-[.9] font-extrabold tracking-[-0.04em]">
+              <span className="block">Rally.</span>
+              <span className="block">Bowl.</span>
+              <span className="block">Sip.</span>
+            </h1>
+            <p className="mt-[18px] font-serif text-[clamp(30px,6vw,48px)] leading-[1.05] italic">
+              &amp; stay a while.
+            </p>
+            <p className="mt-7 max-w-[460px] text-[clamp(16px,2.2vw,18px)] leading-[1.55] text-pretty text-mist">
+              Loop Social is a new indoor home for pickleball, cricket and a cozy café. Join the
+              list for opening dates, early court bookings and launch events.
+            </p>
           </div>
-          <a href="#join" className="bg-white text-black px-4 py-2 md:px-6 md:py-2.5 rounded-full text-xs md:text-sm font-semibold hover:bg-[#3b82f6] transition-colors shadow-lg cursor-pointer inline-block">
-            Get started 
-          </a>
-        </nav>
+        </section>
 
-        {/* Form moved to bottom */}
-      </section>
-
-      {/* ─── WHAT WE OFFER SECTION ─── */}
-      <section id="offer" className="relative z-10 bg-neutral-900/80 backdrop-blur-2xl py-16 px-4 md:py-24 md:px-8 border-t border-white/10">
-        <div className="max-w-[1200px] mx-auto">
-          <p className="text-[#3b82f6] font-bold tracking-widest uppercase text-xs md:text-sm mb-4">What We Offer</p>
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-['Anton'] uppercase tracking-wider mb-12 md:mb-16 text-white leading-tight">Redefining the indoor club experience.</h2>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="bg-white/5 p-8 rounded-[2rem] border border-white/10 hover:bg-white/10 transition-colors shadow-xl">
-              <div className="text-blue-400 mb-6 bg-white/10 w-16 h-16 flex items-center justify-center rounded-2xl shadow-inner">
-                <svg className="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                  <circle cx="12" cy="12" r="10" />
-                  <path d="m16 8-4 4-4-4" />
-                  <path d="M12 12v8" />
-                </svg>
-              </div>
-              <h3 className="text-2xl font-bold mb-4 text-white">Pickleball</h3>
-              <p className="text-neutral-300 leading-relaxed text-sm">
-                Premium, well-lit, tournament-spec courts designed for both casual drop-ins and competitive leagues. Experience the fastest growing sport the right way.
-              </p>
-            </div>
-            
-            <div className="bg-white/5 p-8 rounded-[2rem] border border-white/10 hover:bg-white/10 transition-colors shadow-xl">
-              <div className="text-blue-400 mb-6 bg-white/10 w-16 h-16 flex items-center justify-center rounded-2xl shadow-inner">
-                <svg className="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                </svg>
-              </div>
-              <h3 className="text-2xl font-bold mb-4 text-white">Cricket Nets</h3>
-              <p className="text-neutral-300 leading-relaxed text-sm">
-                Professional-grade indoor cricket nets allowing you to perfect your drive and bowling technique year-round, unbothered by the weather outside.
-              </p>
-            </div>
-
-            <div className="bg-white/5 p-8 rounded-[2rem] border border-white/10 hover:bg-white/10 transition-colors shadow-xl">
-              <div className="text-blue-400 mb-6 bg-white/10 w-16 h-16 flex items-center justify-center rounded-2xl shadow-inner">
-                <svg className="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M18 8h1a4 4 0 0 1 0 8h-1" />
-                  <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z" />
-                  <line x1="6" y1="1" x2="6" y2="4" />
-                  <line x1="10" y1="1" x2="10" y2="4" />
-                  <line x1="14" y1="1" x2="14" y2="4" />
-                </svg>
-              </div>
-              <h3 className="text-2xl font-bold mb-4 text-white">Specialty Cafe</h3>
-              <p className="text-neutral-300 leading-relaxed text-sm">
-                Our in-house cafe serves up crafted coffee and recovery smoothies. It's a space built to actually hang out, socialize, and recover after the game.
-              </p>
-            </div>
+        <section className="mx-auto max-w-[520px] min-w-0 flex-[1_1_380px]">
+          <div className="rounded-[28px] bg-cream p-[clamp(24px,4vw,36px)] text-navy shadow-[0_30px_60px_-20px_rgba(10,20,35,.55)]">
+            <SignupForm />
           </div>
-        </div>
-      </section>
+        </section>
+      </main>
 
-      {/* ─── WAITLIST FORM SECTION ─── */}
-      <section id="join" className="relative z-10 bg-neutral-900/95 backdrop-blur-3xl py-16 px-4 md:py-24 md:px-8 border-t border-white/10 flex justify-center">
-        <div className="max-w-md w-full bg-white/5 p-6 md:p-10 rounded-2xl md:rounded-[2rem] border border-white/10 shadow-2xl relative overflow-hidden">
-          
-          <div className="absolute top-0 right-0 w-64 h-64 bg-[#3b82f6] opacity-10 blur-[100px] rounded-full pointer-events-none"></div>
+      <div className="overflow-hidden border-y-[1.5px] border-cream/18 py-[18px]">
+        <Marquee
+          words={["PICKLEBALL", "CRICKET", "CAFÉ", "AJAX, ON"]}
+          className="text-[clamp(20px,4vw,32px)]"
+        />
+      </div>
 
-          <h2 className="text-3xl md:text-4xl font-bold mb-2 md:mb-3 font-['Anton'] tracking-wider uppercase text-white relative z-10">Join The Waitlist</h2>
-          <p className="text-neutral-300 mb-8 md:mb-10 text-sm md:text-[15px] font-medium relative z-10">
-            Secure your spot before our official launch. We'll notify you as soon as memberships open.
-          </p>
-
-          <form action="https://formsubmit.co/xgmskl@gmail.com" method="POST" className="flex flex-col gap-5 relative z-10">
-            <input type="hidden" name="_captcha" value="false" />
-            <input type="hidden" name="_subject" value="New Waitlist Signup - The Loop Social Club" />
-            
-            <input 
-              type="text" name="name" placeholder="Full Name" required 
-              className="p-4 rounded-xl bg-white/90 border-none text-black focus:ring-4 focus:ring-[#3b82f6]/50 outline-none font-medium transition-all" 
-            />
-            <input 
-              type="email" name="email" placeholder="Email Address" required 
-              className="p-4 rounded-xl bg-white/90 border-none text-black focus:ring-4 focus:ring-[#3b82f6]/50 outline-none font-medium transition-all" 
-            />
-            <input 
-              type="tel" name="phone" placeholder="Phone Number" required 
-              className="p-4 rounded-xl bg-white/90 border-none text-black focus:ring-4 focus:ring-[#3b82f6]/50 outline-none font-medium transition-all" 
-            />
-            <button 
-              type="submit" 
-              className="bg-[#3b82f6] text-black font-bold p-4 rounded-xl mt-4 text-[16px] uppercase tracking-wider hover:bg-white transition-colors shadow-xl"
+      <section className="mx-auto w-full max-w-[1320px] pt-[clamp(40px,6vw,72px)] pb-[clamp(32px,5vw,56px)]">
+        <div className={`no-scrollbar flex snap-x snap-mandatory gap-3.5 overflow-x-auto ${gutter}`}>
+          {FEATURES.map((f) => (
+            <article
+              key={f.n}
+              className={`flex min-h-[220px] flex-[1_0_min(280px,78vw)] snap-start flex-col gap-10 rounded-3xl p-6 ${
+                f.filled ? "bg-cream text-navy" : "border-[1.5px] border-cream/22"
+              }`}
             >
-              Secure My Spot
-            </button>
-          </form>
+              <span
+                className={`font-display text-xs font-semibold tracking-[0.1em] ${f.filled ? "text-slate" : "text-mist"}`}
+              >
+                {f.n}
+              </span>
+              <div className="flex flex-col gap-2">
+                <h3 className="font-display text-2xl leading-none font-extrabold tracking-[-0.02em]">
+                  {f.title}
+                </h3>
+                <p
+                  className={`font-serif text-[22px] leading-[1.2] italic ${f.filled ? "text-slate" : "text-mist"}`}
+                >
+                  {f.body}
+                </p>
+              </div>
+            </article>
+          ))}
         </div>
       </section>
 
+      <footer
+        className={`mx-auto flex w-full max-w-[1320px] flex-wrap items-center justify-between gap-x-6 gap-y-3 pt-6 pb-8 text-sm leading-[1.4] text-mist ${gutter}`}
+      >
+        <span>© 2026 Loop Social · Ajax, Ontario</span>
+        <div className="flex flex-wrap gap-5">
+          <a href={`mailto:${site.email}`} className="text-cream underline hover:text-white">
+            {site.email}
+          </a>
+          {site.instagramUrl && (
+            <a href={site.instagramUrl} className="text-cream underline hover:text-white">
+              Instagram
+            </a>
+          )}
+        </div>
+      </footer>
     </div>
   );
 }

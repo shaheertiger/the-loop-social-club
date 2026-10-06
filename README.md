@@ -1,36 +1,51 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Loop Social
 
-## Getting Started
+Website for Loop Social — indoor pickleball, cricket nets and a café in Ajax, Ontario.
+Built with Next.js (App Router) and Tailwind CSS v4.
 
-First, run the development server:
+## What's live
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+**Pre-launch: only the Coming Soon page is public.** `app/page.tsx` renders the lead-capture
+page at `/`; every other URL returns 404.
+
+The full marketing site is built but deliberately unreachable. It lives in `app/_website/`,
+a [private folder](https://nextjs.org/docs/app/getting-started/project-structure#private-folders),
+so Next.js never routes it and nothing links to it.
+
+### Launching the full website
+
+Replace the contents of `app/page.tsx` with:
+
+```tsx
+import { Website } from "./_website/Website";
+
+export default function Home() {
+  return <Website />;
+}
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Before launch, swap the `ImagePlaceholder` blocks for real photography and fill in the
+placeholder address, hours and social links.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Configuration
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+`app/_lib/site.ts` holds the contact email, social links and the signup endpoint.
+Coming Soon signups are POSTed as JSON (`name`, `email`, `phone`, `interests`) to a
+[FormSubmit](https://formsubmit.co) AJAX endpoint, which emails them on.
 
-## Learn More
+## Development
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+npm install
+npm run dev     # http://localhost:3000
+npm run lint
+npm run build
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Structure
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- `app/page.tsx`: Coming Soon page (the only public route)
+- `app/_components/`: shared pieces (logo, marquee, loop animation, signup form)
+- `app/_website/`: full marketing site (not routed yet)
+- `app/_lib/`: site config and hooks
+- `public/brand/`: logo SVGs (navy and cream)
