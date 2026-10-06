@@ -23,10 +23,10 @@ export default function Home() {
         </div>
         {/* Giant Overlay Heading (pushed behind the text) */}
         <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none z-[-1] leading-[0.85] opacity-60">
-          <h1 className="font-['Anton'] text-[24vw] md:text-[16vw] tracking-tighter text-white drop-shadow-2xl translate-x-[-2%] md:translate-x-[-8%] uppercase">
+          <h1 className="font-['Anton'] text-[15vw] md:text-[16vw] tracking-tighter text-white drop-shadow-2xl translate-x-[-2%] md:translate-x-[-8%] uppercase">
             Pickleball
           </h1>
-          <h1 className="font-['Anton'] text-[26vw] md:text-[18vw] tracking-tighter text-white drop-shadow-2xl translate-x-[2%] md:translate-x-[8%] uppercase text-[#f4f4f5]">
+          <h1 className="font-['Anton'] text-[17vw] md:text-[18vw] tracking-tighter text-white drop-shadow-2xl translate-x-[2%] md:translate-x-[8%] uppercase text-[#f4f4f5]">
             Passion
           </h1>
         </div>
