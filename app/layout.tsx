@@ -20,9 +20,9 @@ const instrumentSerif = Instrument_Serif({
 });
 
 export const metadata: Metadata = {
-  title: "Loop Social — Opening soon in Ajax, Ontario",
+  title: "Loop Social — Opening very soon in South Ajax",
   description:
-    "Loop Social is a new indoor home for pickleball, cricket and a cozy café in Ajax, Ontario. Join the list for opening dates, early court bookings and launch events.",
+    "South Ajax’s new social sports destination featuring 6 indoor pickleball courts, cricket training lanes, a café and a dedicated event space for parties, gatherings and celebrations. Minutes from Hwy 401.",
 };
 
 export const viewport: Viewport = {
