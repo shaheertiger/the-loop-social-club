@@ -6,7 +6,7 @@ export const inputClass =
   "rounded-[14px] border-[1.5px] bg-white px-4 font-sans text-base font-medium text-navy outline-none transition-[border-color,box-shadow] placeholder:text-placeholder focus:border-navy focus:shadow-[0_0_0_4px_rgba(39,61,87,.12)]";
 export const labelClass = "flex flex-col gap-1.5 font-sans text-[13px] leading-none font-semibold";
 export const submitClass =
-  "mt-2.5 flex h-[58px] cursor-pointer items-center justify-center gap-2.5 rounded-full border-0 bg-navy font-display text-[15px] font-semibold tracking-[0.02em] text-cream transition-[transform,background-color] hover:bg-navy-deep active:scale-[.98] disabled:cursor-wait disabled:opacity-80";
+  "mt-2.5 flex h-[58px] cursor-pointer items-center justify-center gap-2.5 rounded-full border-0 bg-navy px-4 font-display text-[clamp(11.5px,3.5vw,15px)] font-semibold tracking-[0.02em] whitespace-nowrap text-cream transition-[transform,background-color] hover:bg-navy-deep active:scale-[.98] disabled:cursor-wait disabled:opacity-80";
 export const outlineButtonClass =
   "min-h-11 cursor-pointer rounded-full border-[1.5px] border-navy bg-transparent px-[18px] font-sans text-sm font-semibold text-navy transition-colors hover:bg-navy hover:text-cream";
 

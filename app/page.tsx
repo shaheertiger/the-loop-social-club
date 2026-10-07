@@ -12,23 +12,23 @@ import { site } from "./_lib/site";
 const OFFERINGS = [
   {
     n: "01",
-    title: "Pickleball",
+    title: "PICKLEBALL",
     body: "6 indoor courts for open play, leagues, lessons, tournaments and social matches.",
   },
   {
     n: "02",
-    title: "Cricket",
+    title: "CRICKET",
     body: "Dedicated indoor cricket lanes for batting, bowling, coaching and team training.",
   },
   {
     n: "03",
-    title: "The Café",
+    title: "THE CAFÉ",
     body: "Coffee, bites and a place to hang out before, after or between games.",
     filled: true,
   },
   {
     n: "04",
-    title: "Events & Gatherings",
+    title: "EVENTS & GATHERINGS",
     body: "A flexible space for birthdays, private events, team gatherings, celebrations and community events.",
   },
 ];
@@ -61,10 +61,10 @@ export default function ComingSoon() {
           </div>
           <div className="relative">
             <p className={`mb-[22px] ${eyebrow}`}>OPENING VERY SOON</p>
-            <h1 className="font-display text-[clamp(52px,11.5vw,120px)] leading-[.9] font-extrabold tracking-[-0.04em]">
-              <span className="block">Play.</span>
-              <span className="block">Connect.</span>
-              <span className="block">Stay.</span>
+            <h1 className="font-display text-[clamp(44px,10.5vw,96px)] leading-[.92] font-extrabold tracking-[-0.04em]">
+              <span className="block">PLAY.</span>
+              <span className="block">CONNECT.</span>
+              <span className="block">STAY.</span>
             </h1>
             <p className="mt-7 max-w-[480px] text-[clamp(16px,2.2vw,18px)] leading-[1.55] text-pretty text-mist">
               South Ajax&rsquo;s new social sports destination featuring 6 indoor pickleball courts,
@@ -140,9 +140,8 @@ export default function ComingSoon() {
         className={`mx-auto w-full max-w-[1320px] pt-[clamp(24px,4vw,48px)] pb-[clamp(48px,7vw,96px)] ${gutter}`}
       >
         <div className="flex flex-col gap-6 rounded-[clamp(28px,4vw,40px)] border-[1.5px] border-cream/22 p-[clamp(24px,5vw,56px)]">
-          <p className={eyebrow}>WE&rsquo;RE HIRING</p>
           <h2 id="team-title" className={`max-w-[760px] ${sectionTitle}`}>
-            Join our team.
+            JOIN OUR TEAM
           </h2>
           <p className="max-w-[620px] text-[clamp(16px,2.2vw,18px)] leading-[1.55] text-pretty text-mist">
             We&rsquo;re looking for experienced pickleball and cricket coaches, front-desk staff, café

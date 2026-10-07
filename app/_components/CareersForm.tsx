@@ -77,7 +77,7 @@ export function CareersForm() {
         aria-expanded={false}
         className="flex h-14 cursor-pointer items-center gap-2.5 self-start rounded-full border-0 bg-cream px-[26px] font-display text-sm font-semibold text-navy transition-[transform,background-color] hover:bg-white active:scale-[.98]"
       >
-        Work with us <span className="text-lg">→</span>
+        WORK WITH US <span className="text-lg">→</span>
       </button>
     );
   }
