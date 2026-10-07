@@ -107,13 +107,11 @@ export function FoundersForm() {
   return (
     <form onSubmit={handleSubmit} noValidate className="m-0 flex flex-col gap-3.5">
       <div className="mb-1.5 flex flex-col gap-2">
-        <p className="font-display text-[11px] leading-[1.4] font-semibold tracking-[0.18em] text-slate">
+        <h2 className="font-display text-[clamp(22px,4.2vw,28px)] leading-[1.08] font-extrabold tracking-[-0.02em] text-balance">
           FOUNDING MEMBERSHIPS
-        </p>
-        <h2 className="font-display text-[clamp(24px,4.5vw,30px)] leading-[1.08] font-extrabold tracking-[-0.03em] text-balance">
-          Be one of the first inside The Loop.
         </h2>
         <p className="font-sans text-[15px] leading-normal text-pretty text-slate">
+          <strong className="font-semibold text-navy">Be one of the first inside The Loop.</strong>{" "}
           Join our Founders List for priority access to memberships, opening-week bookings, launch
           events and exclusive founding-member perks.
         </p>
@@ -189,7 +187,7 @@ export function FoundersForm() {
           "Sending…"
         ) : (
           <>
-            Join the Founders List <span className="text-lg">→</span>
+            JOIN THE FOUNDERS LIST <span className="text-lg">→</span>
           </>
         )}
       </button>
