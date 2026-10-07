@@ -30,8 +30,11 @@ placeholder address, hours and social links.
 ## Configuration
 
 `app/_lib/site.ts` holds the contact email, social links and the signup endpoint.
-Coming Soon signups are POSTed as JSON (`name`, `email`, `phone`, `interests`) to a
-[FormSubmit](https://formsubmit.co) AJAX endpoint, which emails them on.
+The main page has two forms, both POSTed as JSON to a [FormSubmit](https://formsubmit.co)
+AJAX endpoint that emails them on (see `app/_lib/submitLead.ts`):
+
+- **Founders List** (`FoundersForm`): `name`, `email`, `phone`, `interests`
+- **Join our team** (`CareersForm`): `name`, `email`, `phone`, `roles`, `about`
 
 ## Development
 
@@ -45,7 +48,7 @@ npm run build
 ## Structure
 
 - `app/page.tsx`: Coming Soon page (the only public route)
-- `app/_components/`: shared pieces (logo, marquee, loop animation, signup form)
+- `app/_components/`: shared pieces (logo, marquee, loop animation, forms)
 - `app/_website/`: full marketing site (not routed yet)
 - `app/_lib/`: site config and hooks
 - `public/brand/`: logo SVGs (navy and cream)
