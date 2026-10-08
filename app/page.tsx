@@ -41,13 +41,13 @@ export default function ComingSoon() {
   return (
     <div className="flex min-h-svh flex-col overflow-x-hidden bg-navy font-sans text-cream">
       <header
-        className={`mx-auto flex w-full max-w-[1320px] items-center justify-between gap-4 py-5 ${gutter}`}
+        className={`mx-auto flex w-full max-w-[1320px] flex-wrap items-center justify-between gap-x-3 gap-y-3 py-5 ${gutter}`}
       >
-        <Logo tone="cream" priority className="block h-[clamp(40px,7vw,56px)] w-auto" />
-        <div className="flex items-center gap-2 rounded-full border-[1.5px] border-cream/35 px-3.5 py-[9px] font-display text-[11px] leading-none font-semibold tracking-[0.12em] whitespace-nowrap">
-          <span className="size-[7px] flex-none rounded-full bg-cream" />
-          SOUTH AJAX
-          <span className="hidden sm:inline">· MINUTES FROM HWY 401</span>
+        <Logo tone="cream" priority className="block h-[clamp(32px,9vw,56px)] w-auto" />
+        <div className="flex items-center gap-2.5 rounded-full border-[1.5px] border-cream/45 px-4 py-3 font-display text-[clamp(12.5px,3.4vw,15px)] leading-none font-semibold tracking-[0.1em] whitespace-nowrap">
+          <span className="size-2 flex-none rounded-full bg-cream" />
+          SOUTH AJAX, ON
+          <span className="hidden lg:inline">· MINUTES FROM HWY 401</span>
         </div>
       </header>
 
