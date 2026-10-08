@@ -5,8 +5,7 @@ import { LoopArt } from "./_components/LoopArt";
 import { Marquee } from "./_components/Marquee";
 import { site } from "./_lib/site";
 
-// Pre-launch: this coming-soon page is the main public route (plus /welcome-2 to
-// /welcome-4, standalone pages in public/ linked from the footer).
+// Pre-launch: this coming-soon page is the only public route.
 // The full marketing site lives in app/_website (a private, unroutable folder).
 
 const OFFERINGS = [
@@ -158,15 +157,6 @@ export default function ComingSoon() {
         <div className="flex flex-wrap gap-5">
           <a href={`mailto:${site.email}`} className="text-cream underline hover:text-white">
             {site.email}
-          </a>
-          <a href="/welcome-2" className="text-cream underline hover:text-white">
-            Welcome 2
-          </a>
-          <a href="/welcome-3" className="text-cream underline hover:text-white">
-            Welcome 3
-          </a>
-          <a href="/welcome-4" className="text-cream underline hover:text-white">
-            Welcome 4
           </a>
           {site.instagramUrl && (
             <a href={site.instagramUrl} className="text-cream underline hover:text-white">
