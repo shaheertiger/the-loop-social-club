@@ -46,14 +46,25 @@ export async function POST(request: Request) {
       },
       body: JSON.stringify({ ...fields, _subject: config.subject, _template: "table" }),
     });
-    const data = (await res.json().catch(() => null)) as { success?: string | boolean; message?: string } | null;
+    const text = await res.text();
+    let data: { success?: string | boolean; message?: string } | null = null;
+    try {
+      data = JSON.parse(text);
+    } catch {}
     if (!res.ok || String(data?.success) !== "true") {
-      console.error("FormSubmit rejected submission", res.status, data?.message);
-      return Response.json({ ok: false, error: "Delivery failed" }, { status: 502 });
+      const reason = data?.message ?? text.replace(/\s+/g, " ").slice(0, 200);
+      console.error("FormSubmit rejected submission", res.status, reason);
+      return Response.json(
+        { ok: false, error: "Delivery failed", detail: { status: res.status, reason } },
+        { status: 502 },
+      );
     }
   } catch (error) {
     console.error("FormSubmit request failed", error);
-    return Response.json({ ok: false, error: "Delivery failed" }, { status: 502 });
+    return Response.json(
+      { ok: false, error: "Delivery failed", detail: { reason: String(error) } },
+      { status: 502 },
+    );
   }
 
   return Response.json({ ok: true });
