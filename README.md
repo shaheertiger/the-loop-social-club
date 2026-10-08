@@ -30,7 +30,7 @@ placeholder address, hours and social links.
 ## Configuration
 
 `app/_lib/site.ts` holds the contact email, social links and the signup endpoint.
-The main page has two forms, both POSTed as JSON from the browser straight to a
+The main page has two forms, both delivered as JSON to a
 [FormSubmit](https://formsubmit.co) AJAX endpoint that emails them on (see
 `app/_lib/submitLead.ts`):
 
@@ -38,10 +38,15 @@ The main page has two forms, both POSTed as JSON from the browser straight to a
 - **Join our team** (`CareersForm`): `name`, `email`, `phone`, `roles`, `about`
 
 FormSubmit activates a recipient separately for each site address (it checks the
-page the form is on). When the site moves to a new domain, submit the form once
-from that domain and click **Activate Form** in the email FormSubmit sends.
-Submissions can't be relayed through a server route: FormSubmit's Cloudflare
-protection blocks requests from Vercel's servers.
+page the form is on), and its bot protection blocks requests sent from servers.
+So the forms submit through a hidden iframe of `/submit-bridge` loaded from the
+one address FormSubmit has activated (`formBridge.origin`, the project's
+`vercel.app` URL). That makes the forms work on any domain without further
+activation. The bridge only accepts messages from the site's own domains
+(`isAllowedParent`) and may only be embedded by them (`frame-ancestors` header
+in `next.config.ts`). If the vercel.app address ever changes, submit the form
+once from the new one, click **Activate Form** in the FormSubmit email, and
+update `formBridge.origin`.
 
 ## Development
 
