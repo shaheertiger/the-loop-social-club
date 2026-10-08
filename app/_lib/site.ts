@@ -4,6 +4,12 @@ export const site = {
   // Leave empty to hide the link until the real profile URL is known.
   instagramUrl: "",
   tiktokUrl: "",
-  // Where form submissions are delivered (FormSubmit AJAX endpoint).
-  signupEndpoint: "https://formsubmit.co/ajax/play@theloopsocial.ca",
+};
+
+// Server-only: where form submissions are delivered. The /api/lead route
+// forwards to FormSubmit, which activates each recipient per site address,
+// so requests always identify as the address that has been activated.
+export const formDelivery = {
+  endpoint: "https://formsubmit.co/ajax/play@theloopsocial.ca",
+  activatedOrigin: "https://the-loop-social-club.vercel.app",
 };

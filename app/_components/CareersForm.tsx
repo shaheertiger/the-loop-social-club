@@ -54,7 +54,7 @@ export function CareersForm() {
 
     setStatus("loading");
     try {
-      await submitLead("New job interest — Loop Social", {
+      await submitLead("careers", {
         list: "Join our team",
         name: name.trim(),
         email: email.trim(),

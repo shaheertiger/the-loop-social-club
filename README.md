@@ -29,12 +29,17 @@ placeholder address, hours and social links.
 
 ## Configuration
 
-`app/_lib/site.ts` holds the contact email, social links and the signup endpoint.
-The main page has two forms, both POSTed as JSON to a [FormSubmit](https://formsubmit.co)
-AJAX endpoint that emails them on (see `app/_lib/submitLead.ts`):
+`app/_lib/site.ts` holds the contact email, social links and form delivery settings.
+The main page has two forms. Both POST to the site's own `/api/lead` route
+(`app/api/lead/route.ts`), which validates the fields and forwards them to
+[FormSubmit](https://formsubmit.co), which emails them on:
 
 - **Founders List** (`FoundersForm`): `name`, `email`, `phone`, `interests`
 - **Join our team** (`CareersForm`): `name`, `email`, `phone`, `roles`, `about`
+
+FormSubmit activates a recipient separately for each site address, so the route
+always identifies as `formDelivery.activatedOrigin`. That way the forms work on
+any domain without re-activating.
 
 ## Development
 
