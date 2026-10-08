@@ -65,7 +65,7 @@ export function FoundersForm() {
 
     setStatus("loading");
     try {
-      await submitLead("New Founders List signup — Loop Social", {
+      await submitLead("founders", {
         list: "Founders List",
         name: name.trim(),
         email: email.trim(),
