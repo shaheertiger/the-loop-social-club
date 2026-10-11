@@ -8,13 +8,13 @@ const HOLES: [number, number][] = [
   [7.5, 4],
 ];
 
-/** Ball shapes in a -16..16 coordinate space, for use inside another SVG. */
+/** Orange ball with cream holes, as in the logo; -16..16 coordinate space, for use inside another SVG. */
 export function PickleballShapes() {
   return (
     <>
-      <circle r={14} className="fill-cream" />
+      <circle r={14} className="fill-orange" />
       {HOLES.map(([cx, cy]) => (
-        <circle key={`${cx},${cy}`} cx={cx} cy={cy} r={2.3} className="fill-navy" />
+        <circle key={`${cx},${cy}`} cx={cx} cy={cy} r={2.3} className="fill-cream" />
       ))}
     </>
   );

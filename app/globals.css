@@ -3,6 +3,7 @@
 /* Loop Social design tokens (see design handoff README). */
 @theme inline {
   --color-navy: #273d57;
+  --color-orange: #bc683a; /* brand accent, from the logo's pickleball */
   --color-navy-deep: #1b2c40;
   --color-cream: #f4eee2;
   --color-sand: #e7dfcf;

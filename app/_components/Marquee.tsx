@@ -19,7 +19,7 @@ export function Marquee({ words, className = "" }: MarqueeProps) {
         }
       >
         {word}
-        <span className="size-3 flex-none rounded-full bg-cream" />
+        <span className="size-3 flex-none rounded-full bg-orange" />
       </span>
     )),
   );

@@ -45,7 +45,7 @@ export default function ComingSoon() {
       >
         <Logo tone="cream" priority className="block h-[clamp(32px,9vw,56px)] w-auto" />
         <div className="flex items-center gap-2.5 rounded-full border-[1.5px] border-cream/45 px-4 py-3 font-display text-[clamp(12.5px,3.4vw,15px)] leading-none font-semibold tracking-[0.1em] whitespace-nowrap">
-          <span className="size-2 flex-none rounded-full bg-cream" />
+          <span className="size-2 flex-none rounded-full bg-orange" />
           SOUTH AJAX, ON
           <span className="hidden lg:inline">· MINUTES FROM HWY 401</span>
         </div>
@@ -61,9 +61,9 @@ export default function ComingSoon() {
           <div className="relative">
             <p className={`mb-[22px] ${eyebrow}`}>OPENING VERY SOON</p>
             <h1 className="font-display text-[clamp(44px,10.5vw,96px)] leading-[.92] font-extrabold tracking-[-0.04em]">
-              <span className="block">PLAY.</span>
-              <span className="block">CONNECT.</span>
-              <span className="block">STAY.</span>
+              <span className="block">PLAY<span className="text-orange">.</span></span>
+              <span className="block">CONNECT<span className="text-orange">.</span></span>
+              <span className="block">STAY<span className="text-orange">.</span></span>
             </h1>
             <p className="mt-7 max-w-[480px] text-[clamp(16px,2.2vw,18px)] leading-[1.55] text-pretty text-mist">
               South Ajax&rsquo;s new social sports destination featuring 6 indoor pickleball courts,
