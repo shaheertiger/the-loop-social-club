@@ -1,22 +1,15 @@
 import type { Metadata, Viewport } from "next";
-import { Figtree, Instrument_Serif, Unbounded } from "next/font/google";
+import { Bricolage_Grotesque, Figtree } from "next/font/google";
 import "./globals.css";
 
-const unbounded = Unbounded({
-  variable: "--font-unbounded",
+const bricolage = Bricolage_Grotesque({
+  variable: "--font-bricolage",
   subsets: ["latin"],
 });
 
 const figtree = Figtree({
   variable: "--font-figtree",
   subsets: ["latin"],
-});
-
-const instrumentSerif = Instrument_Serif({
-  variable: "--font-instrument-serif",
-  subsets: ["latin"],
-  weight: "400",
-  style: ["normal", "italic"],
 });
 
 export const metadata: Metadata = {
@@ -26,14 +19,14 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#273D57",
+  themeColor: "#15263A",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${unbounded.variable} ${figtree.variable} ${instrumentSerif.variable} antialiased`}
+      className={`${bricolage.variable} ${figtree.variable} antialiased`}
     >
       <body>{children}</body>
     </html>
