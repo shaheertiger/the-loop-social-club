@@ -7,17 +7,22 @@ import {
   FieldError,
   Honeypot,
   SubmitError,
+  borderClass,
   inputClass,
   labelClass,
+  outlineButtonClass,
   submitClass,
   toggleIn,
 } from "./formParts";
 
-const ROLES = ["Pickleball coach", "Cricket coach", "Front desk", "Café", "Something else"];
+const ROLES = ["Pickleball coach", "Cricket coach", "Front desk", "Café crew", "Event host", "Something else"];
+
+const tone = "light";
+const input = (hasError: boolean) => `h-12 ${inputClass[tone]} ${borderClass(tone, hasError)}`;
 
 type Status = "closed" | "open" | "loading" | "success";
 
-/** "Work with us" button that opens a short job-interest form. */
+/** "See open roles" button that opens a short job-interest form. */
 export function CareersForm() {
   const [status, setStatus] = useState<Status>("closed");
   const [name, setName] = useState("");
@@ -75,9 +80,9 @@ export function CareersForm() {
         type="button"
         onClick={() => setStatus("open")}
         aria-expanded={false}
-        className="flex h-14 cursor-pointer items-center gap-2.5 self-start rounded-full border-0 bg-cream px-[26px] font-display text-sm font-semibold text-navy transition-[transform,background-color] hover:bg-white active:scale-[.98]"
+        className={`self-start whitespace-nowrap md:self-center ${outlineButtonClass[tone]}`}
       >
-        WORK WITH US <span className="text-lg">→</span>
+        See open roles
       </button>
     );
   }
@@ -89,7 +94,7 @@ export function CareersForm() {
         ref={successRef}
         tabIndex={-1}
         aria-live="polite"
-        className="font-serif text-[clamp(24px,4vw,32px)] leading-[1.2] text-cream italic outline-none"
+        className="basis-full font-display text-xl leading-[1.3] font-bold text-navy-deep outline-none"
       >
         Thanks{firstName ? `, ${firstName}` : ""}. We&rsquo;ll be in touch about joining the team.
       </p>
@@ -99,50 +104,65 @@ export function CareersForm() {
   const loading = status === "loading";
 
   return (
-    <div className="w-full max-w-[620px] rounded-[28px] bg-cream p-[clamp(24px,4vw,36px)] text-navy">
-      <form onSubmit={handleSubmit} noValidate className="m-0 flex flex-col gap-3.5" aria-label="Work with us">
-        <label className={labelClass}>
-          Your name
-          <input
-            ref={firstFieldRef}
-            name="name"
-            required
-            value={name}
-            onChange={(e) => {
-              setName(e.target.value);
-              setNameError("");
-            }}
-            placeholder="First and last"
-            autoComplete="name"
-            aria-invalid={nameError ? true : undefined}
-            aria-describedby={nameError ? "careers-name-error" : undefined}
-            className={`h-[54px] ${inputClass} ${nameError ? "border-error" : "border-line"}`}
-          />
-        </label>
-        {nameError && <FieldError id="careers-name-error">{nameError}</FieldError>}
+    <div className="basis-full rounded-3xl bg-white p-[clamp(20px,4vw,32px)] shadow-[0_12px_40px_-24px_rgba(20,37,57,.45)]">
+      <form
+        onSubmit={handleSubmit}
+        noValidate
+        className="m-0 grid grid-cols-1 gap-4 md:grid-cols-2"
+        aria-label="Apply to join the team"
+      >
+        <div className="flex flex-col gap-1.5">
+          <label className={labelClass[tone]}>
+            Your name
+            <input
+              ref={firstFieldRef}
+              name="name"
+              required
+              value={name}
+              onChange={(e) => {
+                setName(e.target.value);
+                setNameError("");
+              }}
+              autoComplete="name"
+              aria-invalid={nameError ? true : undefined}
+              aria-describedby={nameError ? "careers-name-error" : undefined}
+              className={input(!!nameError)}
+            />
+          </label>
+          {nameError && (
+            <FieldError id="careers-name-error" tone={tone}>
+              {nameError}
+            </FieldError>
+          )}
+        </div>
 
-        <label className={labelClass}>
-          Email
-          <input
-            name="email"
-            type="email"
-            required
-            value={email}
-            onChange={(e) => {
-              setEmail(e.target.value);
-              setEmailError("");
-            }}
-            placeholder="you@email.com"
-            autoComplete="email"
-            inputMode="email"
-            aria-invalid={emailError ? true : undefined}
-            aria-describedby={emailError ? "careers-email-error" : undefined}
-            className={`h-[54px] ${inputClass} ${emailError ? "border-error" : "border-line"}`}
-          />
-        </label>
-        {emailError && <FieldError id="careers-email-error">{emailError}</FieldError>}
+        <div className="flex flex-col gap-1.5">
+          <label className={labelClass[tone]}>
+            Email
+            <input
+              name="email"
+              type="email"
+              required
+              value={email}
+              onChange={(e) => {
+                setEmail(e.target.value);
+                setEmailError("");
+              }}
+              autoComplete="email"
+              inputMode="email"
+              aria-invalid={emailError ? true : undefined}
+              aria-describedby={emailError ? "careers-email-error" : undefined}
+              className={input(!!emailError)}
+            />
+          </label>
+          {emailError && (
+            <FieldError id="careers-email-error" tone={tone}>
+              {emailError}
+            </FieldError>
+          )}
+        </div>
 
-        <label className={labelClass}>
+        <label className={labelClass[tone]}>
           <span>
             Phone <span className="font-normal text-muted">(optional)</span>
           </span>
@@ -151,21 +171,23 @@ export function CareersForm() {
             type="tel"
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
-            placeholder="(905) 555-0123"
             autoComplete="tel"
             inputMode="tel"
-            className={`h-[54px] ${inputClass} border-line`}
+            className={input(false)}
           />
         </label>
 
-        <ChipGroup
-          legend="I’m interested in"
-          options={ROLES}
-          selected={roles}
-          onToggle={(role) => setRoles((r) => toggleIn(r, role))}
-        />
+        <div className="md:col-span-2">
+          <ChipGroup
+            legend="I’m interested in"
+            options={ROLES}
+            selected={roles}
+            onToggle={(role) => setRoles((r) => toggleIn(r, role))}
+            tone={tone}
+          />
+        </div>
 
-        <label className={labelClass}>
+        <label className={`md:col-span-2 ${labelClass[tone]}`}>
           <span>
             About you <span className="font-normal text-muted">(optional)</span>
           </span>
@@ -175,22 +197,18 @@ export function CareersForm() {
             value={about}
             onChange={(e) => setAbout(e.target.value)}
             placeholder="Experience, certifications, availability…"
-            className={`resize-y py-3.5 leading-normal ${inputClass} border-line`}
+            className={`resize-y py-3 leading-normal ${inputClass[tone]} ${borderClass(tone, false)}`}
           />
         </label>
 
         <Honeypot inputRef={honeypotRef} />
 
-        <button type="submit" disabled={loading} aria-busy={loading} className={submitClass}>
-          {loading ? (
-            "Sending…"
-          ) : (
-            <>
-              Send <span className="text-lg">→</span>
-            </>
-          )}
-        </button>
-        {submitError && <SubmitError>{submitError}</SubmitError>}
+        <div className="flex flex-col gap-3 md:col-span-2">
+          <button type="submit" disabled={loading} aria-busy={loading} className={`md:max-w-[280px] ${submitClass[tone]}`}>
+            {loading ? "Sending…" : "Send application"}
+          </button>
+          {submitError && <SubmitError tone={tone}>{submitError}</SubmitError>}
+        </div>
       </form>
     </div>
   );

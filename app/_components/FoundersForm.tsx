@@ -1,12 +1,14 @@
 "use client";
 
 import { useEffect, useRef, useState, type FormEvent } from "react";
+import { site } from "../_lib/site";
 import { EMAIL_RE, submitLead } from "../_lib/submitLead";
 import {
   ChipGroup,
   FieldError,
   Honeypot,
   SubmitError,
+  borderClass,
   inputClass,
   labelClass,
   outlineButtonClass,
@@ -15,19 +17,39 @@ import {
 } from "./formParts";
 import { PickleballIcon } from "./PickleballIcon";
 
-const INTERESTS = ["Pickleball", "Cricket", "The Café", "Events & gatherings"];
+const INTERESTS = ["Pickleball", "Cricket", "The Café", "Leagues", "Kids & youth", "Events"];
+const LEVELS = [
+  "Never played, keen to learn",
+  "Beginner",
+  "Intermediate",
+  "Advanced",
+  "Competitive / tournament player",
+  "Just here for the café & events",
+];
+
+const tone = "dark";
+const SELECT_ARROW = {
+  backgroundImage:
+    "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%23142539' stroke-width='1.8'/%3E%3C/svg%3E\")",
+  backgroundSize: "12px 8px",
+  backgroundPosition: "right 16px center",
+};
+const input = (hasError: boolean) => `h-12 ${inputClass[tone]} ${borderClass(tone, hasError)}`;
 
 type Status = "idle" | "loading" | "success";
 
-/** Founding Memberships section: collects names and emails for the Founders List. */
+/** The Founders List sign-up card (dark), from the Coming Soon design. */
 export function FoundersForm() {
-  const [name, setName] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
+  const [postal, setPostal] = useState("");
   const [picks, setPicks] = useState<string[]>([]);
+  const [level, setLevel] = useState(LEVELS[0]);
+  const [consent, setConsent] = useState(false);
   const [status, setStatus] = useState<Status>("idle");
-  const [nameError, setNameError] = useState("");
-  const [emailError, setEmailError] = useState("");
+  const [errors, setErrors] = useState<{ firstName?: string; email?: string; consent?: string }>({});
   const [submitError, setSubmitError] = useState("");
   const honeypotRef = useRef<HTMLInputElement>(null);
   const successHeadingRef = useRef<HTMLHeadingElement>(null);
@@ -37,12 +59,15 @@ export function FoundersForm() {
   }, [status]);
 
   const reset = () => {
-    setName("");
+    setFirstName("");
+    setLastName("");
     setEmail("");
     setPhone("");
+    setPostal("");
     setPicks([]);
-    setNameError("");
-    setEmailError("");
+    setLevel(LEVELS[0]);
+    setConsent(false);
+    setErrors({});
     setSubmitError("");
     setStatus("idle");
   };
@@ -50,11 +75,13 @@ export function FoundersForm() {
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (status === "loading") return;
-    const nameOk = name.trim() !== "";
-    const emailOk = EMAIL_RE.test(email.trim());
-    setNameError(nameOk ? "" : "Please enter your name.");
-    setEmailError(emailOk ? "" : "Please enter a valid email address.");
-    if (!nameOk || !emailOk) return;
+    const next = {
+      firstName: firstName.trim() ? undefined : "Please enter your first name.",
+      email: EMAIL_RE.test(email.trim()) ? undefined : "Please enter a valid email address.",
+      consent: consent ? undefined : "Please tick the box so we can email you.",
+    };
+    setErrors(next);
+    if (next.firstName || next.email || next.consent) return;
     setSubmitError("");
 
     // Bots fill the hidden field; quietly pretend it worked.
@@ -67,10 +94,15 @@ export function FoundersForm() {
     try {
       await submitLead("New Founders List signup — Loop Social", {
         list: "Founders List",
-        name: name.trim(),
+        name: `${firstName.trim()} ${lastName.trim()}`.trim(),
+        first_name: firstName.trim(),
+        last_name: lastName.trim(),
         email: email.trim(),
         phone: phone.trim(),
+        postal_code: postal.trim().toUpperCase(),
         interests: picks.join(", "),
+        level,
+        consent: "Yes: email (and text, if a number was given) about launch news, founding offers and events",
       });
       setStatus("success");
     } catch {
@@ -80,22 +112,21 @@ export function FoundersForm() {
   }
 
   if (status === "success") {
-    const firstName = name.trim().split(/\s+/)[0];
     return (
-      <div className="flex flex-col items-start gap-3.5 py-3" aria-live="polite">
+      <div className="flex flex-col items-start gap-4 py-2" aria-live="polite">
         <PickleballIcon size={56} className="animate-ls-pop" />
-        <h2
+        <h3
           ref={successHeadingRef}
           tabIndex={-1}
-          className="mt-1.5 font-display text-[clamp(26px,5vw,34px)] leading-[1.05] font-extrabold tracking-[-0.03em] outline-none"
+          className="font-display text-[clamp(26px,4vw,32px)] leading-[1.05] font-extrabold tracking-[-0.02em] text-cream outline-none"
         >
-          You&rsquo;re on the Founders List{firstName ? `, ${firstName}` : ""}.
-        </h2>
-        <p className="font-sans text-base leading-[1.55] text-pretty text-slate">
-          We&rsquo;ll email <strong className="text-navy">{email.trim()}</strong> first with founding
+          You&rsquo;re on the Founders List{firstName.trim() ? `, ${firstName.trim()}` : ""}.
+        </h3>
+        <p className="text-base leading-[1.55] text-pretty text-mist">
+          We&rsquo;ll email <strong className="text-cream">{email.trim()}</strong> first with founding
           membership details, opening-week bookings and launch events.
         </p>
-        <button type="button" onClick={reset} className={`mt-2 ${outlineButtonClass}`}>
+        <button type="button" onClick={reset} className={`mt-1 ${outlineButtonClass[tone]}`}>
           Add another person
         </button>
       </div>
@@ -105,95 +136,162 @@ export function FoundersForm() {
   const loading = status === "loading";
 
   return (
-    <form onSubmit={handleSubmit} noValidate className="m-0 flex flex-col gap-3.5">
-      <div className="mb-1.5 flex flex-col gap-2">
-        <h2 className="font-display text-[clamp(22px,4.2vw,28px)] leading-[1.08] font-extrabold tracking-[-0.02em] text-balance">
-          FOUNDING MEMBERSHIPS
-        </h2>
-        <p className="font-sans text-[15px] leading-normal text-pretty text-slate">
-          <strong className="font-semibold text-navy">Be one of the first inside The Loop.</strong>{" "}
-          Join our Founders List for priority access to memberships, opening-week bookings, launch
-          events and exclusive founding-member perks.
-        </p>
+    <form onSubmit={handleSubmit} noValidate className="m-0 flex flex-col gap-4">
+      <div className="flex flex-col gap-1.5">
+        <h3 className="font-display text-[clamp(24px,3.4vw,30px)] leading-[1.1] font-extrabold tracking-[-0.02em] text-cream">
+          Join the Founders List
+        </h3>
+        <p className="text-sm text-mist">Free, takes 20 seconds.</p>
       </div>
 
-      <label className={labelClass}>
-        Your name
-        <input
-          name="name"
-          required
-          value={name}
-          onChange={(e) => {
-            setName(e.target.value);
-            setNameError("");
-          }}
-          placeholder="First and last"
-          autoComplete="name"
-          aria-invalid={nameError ? true : undefined}
-          aria-describedby={nameError ? "founders-name-error" : undefined}
-          className={`h-[54px] ${inputClass} ${nameError ? "border-error" : "border-line"}`}
-        />
-      </label>
-      {nameError && <FieldError id="founders-name-error">{nameError}</FieldError>}
+      <div className="grid grid-cols-1 gap-4 min-[420px]:grid-cols-2">
+        <div className="flex flex-col gap-1.5">
+          <label className={labelClass[tone]}>
+            First name
+            <input
+              name="first_name"
+              required
+              value={firstName}
+              onChange={(e) => {
+                setFirstName(e.target.value);
+                setErrors((x) => ({ ...x, firstName: undefined }));
+              }}
+              autoComplete="given-name"
+              aria-invalid={errors.firstName ? true : undefined}
+              aria-describedby={errors.firstName ? "founders-first-error" : undefined}
+              className={input(!!errors.firstName)}
+            />
+          </label>
+          {errors.firstName && (
+            <FieldError id="founders-first-error" tone={tone}>
+              {errors.firstName}
+            </FieldError>
+          )}
+        </div>
+        <label className={labelClass[tone]}>
+          Last name
+          <input
+            name="last_name"
+            value={lastName}
+            onChange={(e) => setLastName(e.target.value)}
+            autoComplete="family-name"
+            className={input(false)}
+          />
+        </label>
+      </div>
 
-      <label className={labelClass}>
-        Email
-        <input
-          name="email"
-          type="email"
-          required
-          value={email}
-          onChange={(e) => {
-            setEmail(e.target.value);
-            setEmailError("");
-          }}
-          placeholder="you@email.com"
-          autoComplete="email"
-          inputMode="email"
-          aria-invalid={emailError ? true : undefined}
-          aria-describedby={emailError ? "founders-email-error" : undefined}
-          className={`h-[54px] ${inputClass} ${emailError ? "border-error" : "border-line"}`}
-        />
-      </label>
-      {emailError && <FieldError id="founders-email-error">{emailError}</FieldError>}
+      <div className="flex flex-col gap-1.5">
+        <label className={labelClass[tone]}>
+          Email
+          <input
+            name="email"
+            type="email"
+            required
+            value={email}
+            onChange={(e) => {
+              setEmail(e.target.value);
+              setErrors((x) => ({ ...x, email: undefined }));
+            }}
+            autoComplete="email"
+            inputMode="email"
+            aria-invalid={errors.email ? true : undefined}
+            aria-describedby={errors.email ? "founders-email-error" : undefined}
+            className={input(!!errors.email)}
+          />
+        </label>
+        {errors.email && (
+          <FieldError id="founders-email-error" tone={tone}>
+            {errors.email}
+          </FieldError>
+        )}
+      </div>
 
-      <label className={labelClass}>
-        <span>
-          Phone <span className="font-normal text-muted">(optional)</span>
-        </span>
-        <input
-          name="phone"
-          type="tel"
-          value={phone}
-          onChange={(e) => setPhone(e.target.value)}
-          placeholder="(905) 555-0123"
-          autoComplete="tel"
-          inputMode="tel"
-          className={`h-[54px] ${inputClass} border-line`}
-        />
-      </label>
+      <div className="grid grid-cols-1 gap-4 min-[420px]:grid-cols-2">
+        <label className={labelClass[tone]}>
+          <span>
+            Phone <span className="font-normal text-mist">(optional)</span>
+          </span>
+          <input
+            name="phone"
+            type="tel"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+            autoComplete="tel"
+            inputMode="tel"
+            className={input(false)}
+          />
+        </label>
+        <label className={labelClass[tone]}>
+          Postal code
+          <input
+            name="postal_code"
+            value={postal}
+            onChange={(e) => setPostal(e.target.value)}
+            autoComplete="postal-code"
+            maxLength={7}
+            className={`${input(false)} uppercase`}
+          />
+        </label>
+      </div>
 
       <ChipGroup
         legend="I’m most excited for"
         options={INTERESTS}
         selected={picks}
         onToggle={(label) => setPicks((p) => toggleIn(p, label))}
+        tone={tone}
       />
+
+      <label className={labelClass[tone]}>
+        My level
+        <select
+          name="level"
+          value={level}
+          onChange={(e) => setLevel(e.target.value)}
+          className={`${input(false)} cursor-pointer appearance-none bg-no-repeat pr-10 text-[15px]`}
+          style={SELECT_ARROW}
+        >
+          {LEVELS.map((l) => (
+            <option key={l}>{l}</option>
+          ))}
+        </select>
+      </label>
+
+      <div className="flex flex-col gap-1.5">
+        <label className="flex cursor-pointer items-start gap-3 text-[13px] leading-[1.5] text-mist">
+          <input
+            type="checkbox"
+            name="consent"
+            checked={consent}
+            onChange={(e) => {
+              setConsent(e.target.checked);
+              setErrors((x) => ({ ...x, consent: undefined }));
+            }}
+            aria-invalid={errors.consent ? true : undefined}
+            aria-describedby={errors.consent ? "founders-consent-error" : undefined}
+            className="mt-0.5 size-4 flex-none cursor-pointer accent-orange"
+          />
+          Yes, Loop Social may email (and text, if I gave a number) me launch news, founding offers and
+          events. I can unsubscribe anytime.
+        </label>
+        {errors.consent && (
+          <FieldError id="founders-consent-error" tone={tone}>
+            {errors.consent}
+          </FieldError>
+        )}
+      </div>
 
       <Honeypot inputRef={honeypotRef} />
 
-      <button type="submit" disabled={loading} aria-busy={loading} className={submitClass}>
-        {loading ? (
-          "Sending…"
-        ) : (
-          <>
-            JOIN THE FOUNDERS LIST <span className="text-lg">→</span>
-          </>
-        )}
+      <button type="submit" disabled={loading} aria-busy={loading} className={submitClass[tone]}>
+        {loading ? "Sending…" : "Claim my founding spot"}
       </button>
-      {submitError && <SubmitError>{submitError}</SubmitError>}
-      <p className="mt-0.5 text-center font-sans text-xs leading-[1.4] text-muted">
-        Membership packages coming soon. Unsubscribe anytime.
+      {submitError && <SubmitError tone={tone}>{submitError}</SubmitError>}
+      <p className="text-center text-xs text-mist">
+        Loop Social · South Ajax, ON ·{" "}
+        <a href={`mailto:${site.email}`} className="text-cream underline">
+          {site.email}
+        </a>
       </p>
     </form>
   );

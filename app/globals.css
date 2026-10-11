@@ -1,28 +1,32 @@
 @import "tailwindcss";
 
-/* Loop Social design tokens (see design handoff README). */
+/* Loop Social design tokens (Coming Soon design, plus the logo's orange). */
 @theme inline {
-  --color-navy: #273d57;
+  --color-navy: #263b56; /* hero and feature bands */
+  --color-navy-deep: #142539; /* header, stats strip, form card, footer */
+  --color-navy-card: #1f3149; /* cards on navy */
   --color-orange: #bc683a; /* brand accent, from the logo's pickleball */
-  --color-navy-deep: #1b2c40;
-  --color-cream: #f4eee2;
-  --color-sand: #e7dfcf;
+  --color-cream: #f2eee3;
+  --color-sand: #e6dfcf;
+  --color-sky: #9db2c7; /* second-line headline accent on navy */
   --color-slate: #4a5d74;
   --color-mist: #c9d3df;
   --color-muted: #6b7a8c;
-  --color-line: #c9c2b2;
+  --color-line: #d8d0bf;
   --color-error: #a33a2b;
+  --color-error-light: #f2a99c; /* error text on navy */
   --color-placeholder: #7c8ca0;
 
   --font-sans: var(--font-figtree), system-ui, sans-serif;
-  --font-display: var(--font-unbounded), sans-serif;
-  --font-serif: var(--font-instrument-serif), serif;
+  --font-display: var(--font-bricolage), var(--font-figtree), sans-serif;
+  --font-serif: var(--font-bricolage), serif;
 
   --breakpoint-nav: 900px;
 }
 
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: 80px; /* clears the sticky header */
 }
 
 body {
