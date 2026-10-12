@@ -18,12 +18,13 @@ import {
 import { PickleballIcon } from "./PickleballIcon";
 
 const INTERESTS = ["Pickleball", "Cricket", "The Café", "Leagues", "Kids & youth", "Events"];
+// Pickleball skill levels, with the usual 1.0–5.0 skill-rating ranges.
 const LEVELS = [
-  "Never played, keen to learn",
-  "Beginner",
-  "Intermediate",
-  "Advanced",
-  "Competitive / tournament player",
+  "First time / Never played",
+  "Beginner (1.0–2.5)",
+  "Intermediate (3.0–3.5)",
+  "Advanced (4.0–4.5)",
+  "Competitive (4.5+)",
   "Just here for the café & events",
 ];
 
@@ -101,7 +102,7 @@ export function FoundersForm() {
         phone: phone.trim(),
         postal_code: postal.trim().toUpperCase(),
         interests: picks.join(", "),
-        level,
+        pickleball_level: level,
         consent: "Yes: email (and text, if a number was given) about launch news, founding offers and events",
       });
       setStatus("success");
@@ -243,9 +244,10 @@ export function FoundersForm() {
       />
 
       <label className={labelClass[tone]}>
-        My level
+        My pickleball level
         <select
-          name="level"
+          name="pickleball_level"
+          aria-describedby="founders-level-hint"
           value={level}
           onChange={(e) => setLevel(e.target.value)}
           className={`${input(false)} cursor-pointer appearance-none bg-no-repeat pr-10 text-[15px]`}
@@ -255,6 +257,9 @@ export function FoundersForm() {
             <option key={l}>{l}</option>
           ))}
         </select>
+        <span id="founders-level-hint" className="text-xs leading-[1.4] font-normal text-mist">
+          Numbers are the pickleball skill rating (1.0–5.0 scale). A rough guess is fine.
+        </span>
       </label>
 
       <div className="flex flex-col gap-1.5">
