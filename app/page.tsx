@@ -267,45 +267,65 @@ export default function ComingSoon() {
 
         {/* About us */}
         <section id="about" aria-labelledby="about-title" className="bg-white">
-          <div className={`${container} grid gap-10 py-[clamp(56px,8vw,96px)] lg:grid-cols-[1.4fr_1fr] lg:gap-14`}>
-            <div className="flex flex-col gap-5">
-              <p className={`${eyebrow} flex items-center gap-2 text-navy-deep`}>
-                <span aria-hidden="true" className="size-1.5 rounded-full bg-orange" />
-                About us
-              </p>
-              <h2 id="about-title" className={h2}>
-                Built by neighbours, for the neighbourhood<Dot />
-              </h2>
-              <p className="text-base leading-[1.7] text-slate">
-                Loop Social started with a simple frustration: there was no one place in Durham where a
-                family could play pickleball, a teenager could train for cricket, and friends could grab a
-                coffee, all under one roof, all year long.
-              </p>
-              <p className="text-base leading-[1.7] text-slate">
-                So we&rsquo;re building it. Loop Social is a place to break a sweat, meet people you&rsquo;d
-                never otherwise meet, and stay a little longer than you planned. That last part is the whole
-                point.
-              </p>
-              <blockquote className="m-0 mt-2 border-l-4 border-orange pl-5">
-                <p className="font-display text-xl leading-[1.35] font-bold text-navy-deep">
-                  &ldquo;We want this to be the place you come for one game, and end up staying for the whole
-                  evening.&rdquo;
+          <div className={`${container} flex flex-col gap-[clamp(40px,6vw,64px)] py-[clamp(56px,8vw,96px)]`}>
+            {/* The story */}
+            <div className="grid gap-6 lg:grid-cols-[1fr_1.1fr] lg:gap-14">
+              <div className="flex flex-col gap-5">
+                <p className={`${eyebrow} flex items-center gap-2 text-navy-deep`}>
+                  <span aria-hidden="true" className="size-1.5 rounded-full bg-orange" />
+                  About us
                 </p>
-                <footer className="mt-2 text-sm font-semibold text-slate">The Loop Social founders</footer>
-              </blockquote>
+                <h2 id="about-title" className={h2}>
+                  Built by neighbours, for the neighbourhood<Dot />
+                </h2>
+              </div>
+              <div className="flex flex-col gap-5 lg:pt-9">
+                <p className="text-[17px] leading-[1.7] text-slate">
+                  Loop Social started with a simple frustration: there was no one place in Durham where a
+                  family could play pickleball, a teenager could train for cricket, and friends could grab a
+                  coffee, all under one roof, all year long.
+                </p>
+                <p className="text-[17px] leading-[1.7] text-slate">
+                  So we&rsquo;re building it. Loop Social is a place to break a sweat, meet people you&rsquo;d
+                  never otherwise meet, and stay a little longer than you planned. That last part is the whole
+                  point.
+                </p>
+              </div>
             </div>
-            <div className="self-start rounded-2xl bg-navy-deep p-7 text-cream">
-              <h3 className="font-display text-xl font-extrabold">What we stand for</h3>
-              <ul className="m-0 mt-4 flex list-none flex-col gap-4 p-0">
-                {STANDS_FOR.map((v) => (
-                  <li key={v.title} className="flex gap-3 text-[15px] leading-[1.55] text-mist">
-                    <span aria-hidden="true" className="mt-2 size-1.5 flex-none rounded-full bg-orange" />
-                    <span>
-                      <strong className="text-cream">{v.title}</strong> {v.body}
+
+            {/* Our promise */}
+            <figure className="relative m-0 overflow-hidden rounded-[28px] bg-navy-deep px-[clamp(24px,6vw,72px)] py-[clamp(36px,6vw,64px)] text-cream">
+              <span
+                aria-hidden="true"
+                className="pointer-events-none absolute top-3 right-6 font-display text-[clamp(140px,22vw,240px)] leading-none font-extrabold text-orange/45"
+              >
+                &rdquo;
+              </span>
+              <p className={`${eyebrow} text-mist`}>Our promise</p>
+              <blockquote className="m-0 mt-4 max-w-[900px]">
+                <p className="font-display text-[clamp(26px,3.6vw,40px)] leading-[1.2] font-extrabold tracking-[-0.02em] text-balance">
+                  We want this to be the place you come for one game, and end up staying for the{" "}
+                  <span className="text-orange">whole evening</span>.
+                </p>
+              </blockquote>
+            </figure>
+
+            {/* What we stand for */}
+            <div className="flex flex-col gap-6">
+              <h3 className="font-display text-[clamp(22px,2.6vw,28px)] leading-tight font-extrabold tracking-[-0.01em]">
+                What we stand for
+              </h3>
+              <ol className="m-0 grid list-none gap-8 p-0 md:grid-cols-3 md:gap-10">
+                {STANDS_FOR.map((v, i) => (
+                  <li key={v.title} className="flex flex-col gap-2 border-t-2 border-orange pt-5">
+                    <span className="font-display text-sm font-extrabold tracking-[0.08em] text-orange">
+                      {String(i + 1).padStart(2, "0")}
                     </span>
+                    <strong className="font-display text-xl leading-tight font-extrabold text-navy-deep">{v.title}</strong>
+                    <span className="text-[15px] leading-[1.6] text-slate">{v.body}</span>
                   </li>
                 ))}
-              </ul>
+              </ol>
             </div>
           </div>
         </section>
