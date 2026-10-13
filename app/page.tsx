@@ -1,10 +1,11 @@
 import Image, { type StaticImageData } from "next/image";
+import cafeLounge from "../public/photos/cafe-lounge.jpg";
 import cricketNets from "../public/photos/cricket-nets.jpg";
 import pickleballRally from "../public/photos/pickleball-rally.jpg";
 import { CareersForm } from "./_components/CareersForm";
 import { FoundersForm } from "./_components/FoundersForm";
 import { HeroVisual } from "./_components/HeroVisual";
-import { BoltIcon, CafeArt, EventsArt, HeartIcon, UsersIcon } from "./_components/Icons";
+import { BoltIcon, EventsArt, HeartIcon, UsersIcon } from "./_components/Icons";
 import { site } from "./_lib/site";
 
 // Pre-launch: this coming-soon page is the only public route.
@@ -51,7 +52,7 @@ const OFFERINGS: Offering[] = [
     n: "03",
     title: "The Café",
     body: "Coffee, bites and a place to hang out before, after or between games.",
-    Art: CafeArt,
+    photo: { src: cafeLounge, alt: "Café lounge with leather sofas, plants and woven pendant lights beside the courts" },
   },
   {
     n: "04",
