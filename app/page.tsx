@@ -160,18 +160,37 @@ export default function ComingSoon() {
           </div>
         </section>
 
-        {/* Stats strip */}
-        <div className="bg-navy-deep text-cream">
-          <ul
-            className={`${container} no-scrollbar m-0 flex list-none snap-x gap-x-8 gap-y-2 overflow-x-auto py-4 md:justify-between`}
-          >
+        {/* Stats strip: an auto-scrolling ribbon (static list when motion is reduced) */}
+        <div className="overflow-hidden bg-navy-deep py-4 text-cream">
+          <ul aria-hidden="true" className={`${container} m-0 hidden list-none flex-wrap gap-x-8 gap-y-2 motion-reduce:flex`}>
             {STATS.map((s) => (
-              <li key={s} className="flex flex-none snap-start items-center gap-2.5 text-[15px] font-semibold whitespace-nowrap">
+              <li key={s} className="flex items-center gap-2.5 text-[15px] font-semibold whitespace-nowrap">
                 <span aria-hidden="true" className="size-1.5 rounded-full bg-orange" />
                 {s}
               </li>
             ))}
           </ul>
+          <ul className="sr-only">
+            {STATS.map((s) => (
+              <li key={s}>{s}</li>
+            ))}
+          </ul>
+          <div
+            aria-hidden="true"
+            className="flex w-max animate-[ls-marquee_32s_linear_infinite] hover:[animation-play-state:paused] motion-reduce:hidden"
+          >
+            {/* Two identical halves so the -50% loop is seamless; each half repeats the list to fill wide screens. */}
+            {[0, 1].map((half) => (
+              <div key={half} className="flex">
+                {[...STATS, ...STATS, ...STATS].map((s, i) => (
+                  <span key={i} className="flex items-center gap-2.5 pr-12 text-[15px] font-semibold whitespace-nowrap">
+                    <span className="size-1.5 rounded-full bg-orange" />
+                    {s}
+                  </span>
+                ))}
+              </div>
+            ))}
+          </div>
         </div>
 
         {/* Founding membership */}
