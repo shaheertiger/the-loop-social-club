@@ -1,16 +1,10 @@
-import Image from "next/image";
+import Image, { type StaticImageData } from "next/image";
+import cricketNets from "../public/photos/cricket-nets.jpg";
+import pickleballRally from "../public/photos/pickleball-rally.jpg";
 import { CareersForm } from "./_components/CareersForm";
 import { FoundersForm } from "./_components/FoundersForm";
 import { HeroVisual } from "./_components/HeroVisual";
-import {
-  BoltIcon,
-  CafeArt,
-  CricketArt,
-  EventsArt,
-  HeartIcon,
-  PickleballArt,
-  UsersIcon,
-} from "./_components/Icons";
+import { BoltIcon, CafeArt, EventsArt, HeartIcon, UsersIcon } from "./_components/Icons";
 import { site } from "./_lib/site";
 
 // Pre-launch: this coming-soon page is the only public route.
@@ -31,18 +25,27 @@ const PERKS = [
   },
 ];
 
-const OFFERINGS = [
+type Offering = {
+  n: string;
+  title: string;
+  body: string;
+  /** A real photo, or a drawn illustration until one exists. */
+  photo?: { src: StaticImageData; alt: string };
+  Art?: (props: { className?: string }) => React.ReactElement;
+};
+
+const OFFERINGS: Offering[] = [
   {
     n: "01",
     title: "Pickleball",
     body: "6 indoor courts for open play, leagues, lessons, tournaments and social matches.",
-    Art: PickleballArt,
+    photo: { src: pickleballRally, alt: "A player returning the ball at the net on a blue pickleball court" },
   },
   {
     n: "02",
     title: "Cricket",
     body: "Dedicated indoor cricket lanes for batting, bowling, coaching and team training.",
-    Art: CricketArt,
+    photo: { src: cricketNets, alt: "Indoor cricket training lanes with green turf, nets and stumps" },
   },
   {
     n: "03",
@@ -220,10 +223,21 @@ export default function ComingSoon() {
               </p>
             </div>
             <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-              {OFFERINGS.map(({ n, title, body, Art }) => (
+              {OFFERINGS.map(({ n, title, body, photo, Art }) => (
                 <article key={n} className="flex flex-col overflow-hidden rounded-2xl bg-cream">
-                  <div className="grid aspect-[16/9] place-items-center bg-sand sm:aspect-[4/3]">
-                    <Art className="w-[62%]" />
+                  <div className="relative grid aspect-[16/9] place-items-center bg-sand sm:aspect-[4/3]">
+                    {photo ? (
+                      <Image
+                        src={photo.src}
+                        alt={photo.alt}
+                        fill
+                        placeholder="blur"
+                        sizes="(min-width: 1024px) 280px, (min-width: 640px) 50vw, 100vw"
+                        className="object-cover"
+                      />
+                    ) : (
+                      Art && <Art className="w-[62%]" />
+                    )}
                   </div>
                   <div className="flex flex-col gap-2 p-5">
                     <span className="text-xs font-semibold tracking-[0.1em] text-slate">{n}</span>
