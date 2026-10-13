@@ -1,11 +1,12 @@
 import Image, { type StaticImageData } from "next/image";
 import cafeLounge from "../public/photos/cafe-lounge.jpg";
 import cricketNets from "../public/photos/cricket-nets.jpg";
+import eventsGathering from "../public/photos/events-gathering.jpg";
 import pickleballRally from "../public/photos/pickleball-rally.jpg";
 import { CareersForm } from "./_components/CareersForm";
 import { FoundersForm } from "./_components/FoundersForm";
 import { HeroVisual } from "./_components/HeroVisual";
-import { BoltIcon, EventsArt, HeartIcon, UsersIcon } from "./_components/Icons";
+import { BoltIcon, HeartIcon, UsersIcon } from "./_components/Icons";
 import { site } from "./_lib/site";
 
 // Pre-launch: this coming-soon page is the only public route.
@@ -58,7 +59,7 @@ const OFFERINGS: Offering[] = [
     n: "04",
     title: "Events & Gatherings",
     body: "A flexible space for birthdays, private events, team gatherings, celebrations and community events.",
-    Art: EventsArt,
+    photo: { src: eventsGathering, alt: "A crowd gathering between the courts at a Loop Social event, with branded court signs and a check-in desk" },
   },
 ];
 
