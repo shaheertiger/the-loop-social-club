@@ -160,7 +160,7 @@ export default function ComingSoon() {
                 </a>
               </div>
             </div>
-            <div className="min-h-[320px] md:min-h-[480px]">
+            <div className="self-center">
               <HeroVisual />
             </div>
           </div>
