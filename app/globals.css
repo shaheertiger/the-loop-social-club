@@ -26,7 +26,7 @@
 
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: 80px; /* clears the sticky header */
+  scroll-padding-top: 88px; /* clears the sticky header */
 }
 
 body {
