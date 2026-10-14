@@ -91,10 +91,16 @@ export default function ComingSoon() {
     <div className="flex min-h-svh flex-col overflow-x-clip bg-cream font-sans text-navy-deep">
       {/* Header */}
       <header className="sticky top-0 z-30 bg-navy-deep text-cream">
-        <div className={`${container} flex h-16 items-center justify-between gap-4`}>
-          <a href="#top" className="flex items-center gap-2.5 no-underline">
-            <Image src="/brand/loop-mark.png" alt="" width={34} height={34} priority className="size-[34px]" />
-            <span className="font-display text-lg font-extrabold tracking-[0.02em] text-cream">LOOP SOCIAL</span>
+        <div className={`${container} flex h-16 items-center justify-between gap-4 md:h-[76px]`}>
+          <a href="#top" className="flex items-center no-underline">
+            <Image
+              src="/brand/loop-wordmark-cream.png"
+              alt="The Loop Social"
+              width={960}
+              height={240}
+              priority
+              className="h-9 w-auto md:h-11"
+            />
           </a>
           <nav aria-label="Main" className="hidden items-center gap-7 text-sm md:flex">
             <a href="#inside" className="text-cream/85 no-underline hover:text-cream">
@@ -398,10 +404,13 @@ export default function ComingSoon() {
       <footer className="bg-navy-deep text-cream">
         <div className={`${container} grid gap-8 py-12 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr]`}>
           <div className="flex flex-col gap-2">
-            <div className="flex items-center gap-2.5">
-              <Image src="/brand/loop-mark.png" alt="" width={30} height={30} className="size-[30px]" />
-              <span className="font-display text-lg font-extrabold tracking-[0.02em]">LOOP SOCIAL</span>
-            </div>
+            <Image
+              src="/brand/loop-wordmark-cream.png"
+              alt="The Loop Social"
+              width={960}
+              height={240}
+              className="mb-2 h-12 w-auto self-start"
+            />
             <p className="text-sm text-mist">Pickleball · Cricket · Café · Events</p>
             <p className="text-sm text-mist">South Ajax, Ontario</p>
           </div>
