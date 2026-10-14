@@ -4,7 +4,7 @@ import floorPlan from "../../public/photos/floor-plan.jpg";
 /** Hero panel: the club's floor plan, shown whole so its numbered legend stays readable. */
 export function HeroVisual() {
   return (
-    <figure className="m-0 overflow-hidden rounded-[28px] border border-cream/15 bg-[#f6eee4]">
+    <figure className="m-0 overflow-hidden rounded-[28px] border border-cream/15 bg-[#f6f1e8]">
       <Image
         src={floorPlan}
         alt="Floor plan of The Loop Social: 6 pickleball courts, 2 cricket training lanes, a café and lounge, reception, washrooms and lockers, and a private events room"
