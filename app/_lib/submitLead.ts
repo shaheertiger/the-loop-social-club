@@ -7,16 +7,26 @@ export type LeadResult = { type: "lead-result"; id: string; ok: boolean };
 
 const BRIDGE_LOAD_TIMEOUT = 15_000;
 const SUBMIT_TIMEOUT = 25_000;
+const FETCH_TIMEOUT = 15_000;
 
 /** Posts a submission to FormSubmit from the current page. Throws if it wasn't delivered. */
 export async function deliverToFormSubmit(subject: string, fields: Record<string, string>) {
-  const res = await fetch(site.signupEndpoint, {
-    method: "POST",
-    headers: { "Content-Type": "application/json", Accept: "application/json" },
-    body: JSON.stringify({ ...fields, _subject: subject, _template: "table" }),
-  });
-  const data = (await res.json().catch(() => null)) as { success?: string | boolean } | null;
-  if (!res.ok || String(data?.success) !== "true") throw new Error("Submission failed");
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), FETCH_TIMEOUT);
+  try {
+    const res = await fetch(site.signupEndpoint, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Accept: "application/json" },
+      body: JSON.stringify({ ...fields, _subject: subject, _template: "table" }),
+      signal: controller.signal,
+    });
+    const data = (await res.json().catch(() => null)) as { success?: string | boolean; message?: string } | null;
+    if (!res.ok || String(data?.success) !== "true") {
+      throw new Error(`FormSubmit rejected the submission (${res.status}): ${data?.message ?? "no message"}`);
+    }
+  } finally {
+    clearTimeout(timer);
+  }
 }
 
 let bridgeWindow: Promise<Window> | null = null;
@@ -52,17 +62,52 @@ function loadBridge(): Promise<Window> {
   return bridgeWindow;
 }
 
-/** Sends a form submission to the signup inbox. Throws if it wasn't delivered. */
+/**
+ * Sends a form submission to the signup inbox. Throws if it wasn't delivered.
+ *
+ * Tries FormSubmit straight from this page first, then falls back to the
+ * bridge iframe on the activated vercel.app address. A direct attempt from a
+ * new domain also makes FormSubmit email an activation link for that domain;
+ * once it is clicked, direct delivery works and the bridge is no longer needed.
+ */
 export async function submitLead(subject: string, fields: Record<string, string>) {
   // On the activated address itself there is nothing to bridge.
   if (window.location.origin === formBridge.origin) {
     return deliverToFormSubmit(subject, fields);
   }
 
-  const target = await loadBridge();
+  // Start loading the bridge now so the fallback is quick if it's needed.
+  const bridge = loadBridge();
+  bridge.catch(() => {});
+
+  try {
+    return await deliverToFormSubmit(subject, fields);
+  } catch (err) {
+    console.warn("Direct form submission failed, trying the bridge.", err);
+  }
+
+  try {
+    await submitViaBridge(await bridge, subject, fields);
+  } catch (err) {
+    console.error("Bridge form submission failed.", err);
+    throw err;
+  }
+}
+
+/** Builds a mailto: link holding the submission, for when delivery fails. */
+export function leadMailto(subject: string, fields: Record<string, string>) {
+  const body = Object.entries(fields)
+    .filter(([, value]) => value)
+    .map(([key, value]) => `${key.replace(/_/g, " ")}: ${value}`)
+    .join("\n");
+  return `mailto:${site.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+}
+
+/** Sends a submission through the bridge iframe and waits for its reply. */
+function submitViaBridge(target: Window, subject: string, fields: Record<string, string>) {
   const id = crypto.randomUUID();
 
-  await new Promise<void>((resolve, reject) => {
+  return new Promise<void>((resolve, reject) => {
     const timer = window.setTimeout(() => {
       window.removeEventListener("message", onMessage);
       reject(new Error("Submission timed out"));

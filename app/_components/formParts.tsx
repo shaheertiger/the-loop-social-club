@@ -46,13 +46,18 @@ export function FieldError({ id, tone, children }: { id: string; tone: Tone; chi
   );
 }
 
-export function SubmitError({ tone, children }: { tone: Tone; children: string }) {
+/** Shown when a submission couldn't be sent: offers a pre-filled email instead. */
+export function SubmitError({ tone, mailto }: { tone: Tone; mailto: string }) {
   return (
     <p
       role="alert"
       className={`text-center font-sans text-[13px] leading-[1.4] font-medium ${tone === "dark" ? "text-error-light" : "text-error"}`}
     >
-      {children}
+      We couldn&rsquo;t send that. Please try again, or{" "}
+      <a href={mailto} className="underline">
+        email us your details
+      </a>
+      .
     </p>
   );
 }

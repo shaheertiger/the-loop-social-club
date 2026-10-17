@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { site } from "../_lib/site";
-import { EMAIL_RE, submitLead } from "../_lib/submitLead";
+import { EMAIL_RE, leadMailto, submitLead } from "../_lib/submitLead";
 import {
   ChipGroup,
   FieldError,
@@ -51,7 +51,7 @@ export function FoundersForm() {
   const [consent, setConsent] = useState(false);
   const [status, setStatus] = useState<Status>("idle");
   const [errors, setErrors] = useState<{ firstName?: string; email?: string; consent?: string }>({});
-  const [submitError, setSubmitError] = useState("");
+  const [fallbackMailto, setFallbackMailto] = useState("");
   const honeypotRef = useRef<HTMLInputElement>(null);
   const successHeadingRef = useRef<HTMLHeadingElement>(null);
 
@@ -69,7 +69,7 @@ export function FoundersForm() {
     setLevel(LEVELS[0]);
     setConsent(false);
     setErrors({});
-    setSubmitError("");
+    setFallbackMailto("");
     setStatus("idle");
   };
 
@@ -83,7 +83,7 @@ export function FoundersForm() {
     };
     setErrors(next);
     if (next.firstName || next.email || next.consent) return;
-    setSubmitError("");
+    setFallbackMailto("");
 
     // Bots fill the hidden field; quietly pretend it worked.
     if (honeypotRef.current?.value) {
@@ -91,24 +91,27 @@ export function FoundersForm() {
       return;
     }
 
+    const subject = "New Founders List signup — Loop Social";
+    const fields = {
+      list: "Founders List",
+      name: `${firstName.trim()} ${lastName.trim()}`.trim(),
+      first_name: firstName.trim(),
+      last_name: lastName.trim(),
+      email: email.trim(),
+      phone: phone.trim(),
+      postal_code: postal.trim().toUpperCase(),
+      interests: picks.join(", "),
+      pickleball_level: level,
+      consent: "Yes: email (and text, if a number was given) about launch news, founding offers and events",
+    };
+
     setStatus("loading");
     try {
-      await submitLead("New Founders List signup — Loop Social", {
-        list: "Founders List",
-        name: `${firstName.trim()} ${lastName.trim()}`.trim(),
-        first_name: firstName.trim(),
-        last_name: lastName.trim(),
-        email: email.trim(),
-        phone: phone.trim(),
-        postal_code: postal.trim().toUpperCase(),
-        interests: picks.join(", "),
-        pickleball_level: level,
-        consent: "Yes: email (and text, if a number was given) about launch news, founding offers and events",
-      });
+      await submitLead(subject, fields);
       setStatus("success");
     } catch {
       setStatus("idle");
-      setSubmitError("Something went wrong. Please try again in a moment.");
+      setFallbackMailto(leadMailto(subject, fields));
     }
   }
 
@@ -291,7 +294,7 @@ export function FoundersForm() {
       <button type="submit" disabled={loading} aria-busy={loading} className={submitClass[tone]}>
         {loading ? "Sending…" : "Claim my founding spot"}
       </button>
-      {submitError && <SubmitError tone={tone}>{submitError}</SubmitError>}
+      {fallbackMailto && <SubmitError tone={tone} mailto={fallbackMailto} />}
       <p className="text-center text-xs text-mist">
         Loop Social · South Ajax, ON ·{" "}
         <a href={`mailto:${site.email}`} className="text-cream underline">

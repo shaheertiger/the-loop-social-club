@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, type FormEvent } from "react";
-import { EMAIL_RE, submitLead } from "../_lib/submitLead";
+import { EMAIL_RE, leadMailto, submitLead } from "../_lib/submitLead";
 import {
   ChipGroup,
   FieldError,
@@ -32,7 +32,7 @@ export function CareersForm() {
   const [about, setAbout] = useState("");
   const [nameError, setNameError] = useState("");
   const [emailError, setEmailError] = useState("");
-  const [submitError, setSubmitError] = useState("");
+  const [fallbackMailto, setFallbackMailto] = useState("");
   const honeypotRef = useRef<HTMLInputElement>(null);
   const firstFieldRef = useRef<HTMLInputElement>(null);
   const successRef = useRef<HTMLParagraphElement>(null);
@@ -50,27 +50,30 @@ export function CareersForm() {
     setNameError(nameOk ? "" : "Please enter your name.");
     setEmailError(emailOk ? "" : "Please enter a valid email address.");
     if (!nameOk || !emailOk) return;
-    setSubmitError("");
+    setFallbackMailto("");
 
     if (honeypotRef.current?.value) {
       setStatus("success");
       return;
     }
 
+    const subject = "New job interest — Loop Social";
+    const fields = {
+      list: "Join our team",
+      name: name.trim(),
+      email: email.trim(),
+      phone: phone.trim(),
+      roles: roles.join(", "),
+      about: about.trim(),
+    };
+
     setStatus("loading");
     try {
-      await submitLead("New job interest — Loop Social", {
-        list: "Join our team",
-        name: name.trim(),
-        email: email.trim(),
-        phone: phone.trim(),
-        roles: roles.join(", "),
-        about: about.trim(),
-      });
+      await submitLead(subject, fields);
       setStatus("success");
     } catch {
       setStatus("open");
-      setSubmitError("Something went wrong. Please try again in a moment.");
+      setFallbackMailto(leadMailto(subject, fields));
     }
   }
 
@@ -207,7 +210,7 @@ export function CareersForm() {
           <button type="submit" disabled={loading} aria-busy={loading} className={`md:max-w-[280px] ${submitClass[tone]}`}>
             {loading ? "Sending…" : "Send application"}
           </button>
-          {submitError && <SubmitError tone={tone}>{submitError}</SubmitError>}
+          {fallbackMailto && <SubmitError tone={tone} mailto={fallbackMailto} />}
         </div>
       </form>
     </div>
