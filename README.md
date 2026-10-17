@@ -39,10 +39,16 @@ The main page has two forms, both delivered as JSON to a
 
 FormSubmit activates a recipient separately for each site address (it checks the
 page the form is on), and its bot protection blocks requests sent from servers.
-So the forms submit through a hidden iframe of `/submit-bridge` loaded from the
-one address FormSubmit has activated (`formBridge.origin`, the project's
-`vercel.app` URL). That makes the forms work on any domain without further
-activation. The bridge only accepts messages from the site's own domains
+So `submitLead` tries three things in order:
+
+1. Send straight to FormSubmit from the page. On a domain FormSubmit hasn't
+   activated yet, this makes it email an activation link to the inbox. Click
+   **Activate Form** once and this step works from then on.
+2. Send through a hidden iframe of `/submit-bridge` loaded from the address
+   FormSubmit has already activated (`formBridge.origin`, the project's
+   `vercel.app` URL).
+3. If both fail, the form shows a link that opens a pre-filled email to
+   `site.email`, so the visitor can still send their details. The bridge only accepts messages from the site's own domains
 (`isAllowedParent`) and may only be embedded by them (`frame-ancestors` header
 in `next.config.ts`). If the vercel.app address ever changes, submit the form
 once from the new one, click **Activate Form** in the FormSubmit email, and
