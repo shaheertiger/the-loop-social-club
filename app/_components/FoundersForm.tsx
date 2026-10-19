@@ -91,7 +91,6 @@ export function FoundersForm() {
       return;
     }
 
-    const subject = "New Founders List signup — Loop Social";
     const fields = {
       list: "Founders List",
       name: `${firstName.trim()} ${lastName.trim()}`.trim(),
@@ -107,11 +106,11 @@ export function FoundersForm() {
 
     setStatus("loading");
     try {
-      await submitLead(subject, fields);
+      await submitLead("founders", fields);
       setStatus("success");
     } catch {
       setStatus("idle");
-      setFallbackMailto(leadMailto(subject, fields));
+      setFallbackMailto(leadMailto("founders", fields));
     }
   }
 

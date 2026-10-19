@@ -57,7 +57,6 @@ export function CareersForm() {
       return;
     }
 
-    const subject = "New job interest — Loop Social";
     const fields = {
       list: "Join our team",
       name: name.trim(),
@@ -69,11 +68,11 @@ export function CareersForm() {
 
     setStatus("loading");
     try {
-      await submitLead(subject, fields);
+      await submitLead("careers", fields);
       setStatus("success");
     } catch {
       setStatus("open");
-      setFallbackMailto(leadMailto(subject, fields));
+      setFallbackMailto(leadMailto("careers", fields));
     }
   }
 

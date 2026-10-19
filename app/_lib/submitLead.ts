@@ -1,6 +1,7 @@
+import { LEAD_FORMS, type LeadForm } from "./leadForms";
 import { formBridge, site } from "./site";
 
-export const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+export { EMAIL_RE } from "./leadForms";
 
 export type LeadRequest = { type: "lead"; id: string; subject: string; fields: Record<string, string> };
 export type LeadResult = { type: "lead-result"; id: string; ok: boolean };
@@ -8,6 +9,27 @@ export type LeadResult = { type: "lead-result"; id: string; ok: boolean };
 const BRIDGE_LOAD_TIMEOUT = 15_000;
 const SUBMIT_TIMEOUT = 25_000;
 const FETCH_TIMEOUT = 15_000;
+const API_TIMEOUT = 20_000;
+
+/** Posts a submission to the site's own /api/lead route. Throws if it wasn't delivered. */
+async function deliverToApi(form: LeadForm, fields: Record<string, string>) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), API_TIMEOUT);
+  try {
+    const res = await fetch("/api/lead", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Accept: "application/json" },
+      body: JSON.stringify({ form, fields }),
+      signal: controller.signal,
+    });
+    const data = (await res.json().catch(() => null)) as { ok?: boolean; error?: string } | null;
+    if (!res.ok || !data?.ok) {
+      throw new Error(`/api/lead rejected the submission (${res.status}): ${data?.error ?? "no message"}`);
+    }
+  } finally {
+    clearTimeout(timer);
+  }
+}
 
 /** Posts a submission to FormSubmit from the current page. Throws if it wasn't delivered. */
 export async function deliverToFormSubmit(subject: string, fields: Record<string, string>) {
@@ -65,12 +87,22 @@ function loadBridge(): Promise<Window> {
 /**
  * Sends a form submission to the signup inbox. Throws if it wasn't delivered.
  *
- * Tries FormSubmit straight from this page first, then falls back to the
- * bridge iframe on the activated vercel.app address. A direct attempt from a
- * new domain also makes FormSubmit email an activation link for that domain;
- * once it is clicked, direct delivery works and the bridge is no longer needed.
+ * Tries, in order:
+ *   1. The site's own /api/lead route (same origin, so no CORS, no per-domain
+ *      activation and no third-party bot checks in the browser). It emails the
+ *      lead from the server; see app/api/lead/route.ts.
+ *   2. FormSubmit straight from this page.
+ *   3. FormSubmit through the bridge iframe on the activated vercel.app address.
  */
-export async function submitLead(subject: string, fields: Record<string, string>) {
+export async function submitLead(form: LeadForm, fields: Record<string, string>) {
+  const subject = LEAD_FORMS[form].subject;
+
+  try {
+    return await deliverToApi(form, fields);
+  } catch (err) {
+    console.warn("Server form submission failed, trying FormSubmit directly.", err);
+  }
+
   // On the activated address itself there is nothing to bridge.
   if (window.location.origin === formBridge.origin) {
     return deliverToFormSubmit(subject, fields);
@@ -95,7 +127,8 @@ export async function submitLead(subject: string, fields: Record<string, string>
 }
 
 /** Builds a mailto: link holding the submission, for when delivery fails. */
-export function leadMailto(subject: string, fields: Record<string, string>) {
+export function leadMailto(form: LeadForm, fields: Record<string, string>) {
+  const subject = LEAD_FORMS[form].subject;
   const body = Object.entries(fields)
     .filter(([, value]) => value)
     .map(([key, value]) => `${key.replace(/_/g, " ")}: ${value}`)
