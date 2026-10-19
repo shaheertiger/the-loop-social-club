@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { isAllowedParent } from "../_lib/site";
-import { deliverToFormSubmit, type LeadRequest, type LeadResult } from "../_lib/submitLead";
+import { LeadRejected, deliverToFormSubmit, type LeadRequest, type LeadResult } from "../_lib/submitLead";
 
 /** Relays form submissions from an allowed parent page to FormSubmit. */
 export function Bridge() {
@@ -15,12 +15,14 @@ export function Bridge() {
       if (typeof id !== "string" || typeof subject !== "string" || !fields || typeof fields !== "object") return;
 
       let ok = true;
+      let rejected = false;
       try {
         await deliverToFormSubmit(subject, fields);
-      } catch {
+      } catch (err) {
         ok = false;
+        rejected = err instanceof LeadRejected;
       }
-      const result: LeadResult = { type: "lead-result", id, ok };
+      const result: LeadResult = { type: "lead-result", id, ok, rejected };
       (event.source as Window | null)?.postMessage(result, event.origin);
     }
 
