@@ -53,11 +53,13 @@ export function FoundersForm() {
   const [status, setStatus] = useState<Status>("idle");
   const [errors, setErrors] = useState<{ firstName?: string; email?: string; consent?: string }>({});
   const honeypotRef = useRef<HTMLInputElement>(null);
+  // Set synchronously so a fast double tap can't send twice before React re-renders.
+  const sentRef = useRef(false);
   const alreadySubmitted = useAlreadySubmitted("founders");
 
   function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    if (status === "loading") return;
+    if (status === "loading" || sentRef.current) return;
     const next = {
       firstName: firstName.trim() ? undefined : "Please enter your first name.",
       email: EMAIL_RE.test(email.trim()) ? undefined : "Please enter a valid email address.",
@@ -65,6 +67,7 @@ export function FoundersForm() {
     };
     setErrors(next);
     if (next.firstName || next.email || next.consent) return;
+    sentRef.current = true;
     setStatus("loading");
 
     // Bots fill the hidden field; quietly pretend it worked.

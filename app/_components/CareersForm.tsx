@@ -36,6 +36,8 @@ export function CareersForm() {
   const [nameError, setNameError] = useState("");
   const [emailError, setEmailError] = useState("");
   const honeypotRef = useRef<HTMLInputElement>(null);
+  // Set synchronously so a fast double tap can't send twice before React re-renders.
+  const sentRef = useRef(false);
   const firstFieldRef = useRef<HTMLInputElement>(null);
   const alreadySubmitted = useAlreadySubmitted("careers");
 
@@ -45,12 +47,13 @@ export function CareersForm() {
 
   function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    if (status === "loading") return;
+    if (status === "loading" || sentRef.current) return;
     const nameOk = name.trim() !== "";
     const emailOk = EMAIL_RE.test(email.trim());
     setNameError(nameOk ? "" : "Please enter your name.");
     setEmailError(emailOk ? "" : "Please enter a valid email address.");
     if (!nameOk || !emailOk) return;
+    sentRef.current = true;
     setStatus("loading");
     const firstName = name.trim().split(/\s+/)[0];
 
