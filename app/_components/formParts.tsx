@@ -46,22 +46,6 @@ export function FieldError({ id, tone, children }: { id: string; tone: Tone; chi
   );
 }
 
-/** Shown when a submission couldn't be sent: offers a pre-filled email instead. */
-export function SubmitError({ tone, mailto }: { tone: Tone; mailto: string }) {
-  return (
-    <p
-      role="alert"
-      className={`text-center font-sans text-[13px] leading-[1.4] font-medium ${tone === "dark" ? "text-error-light" : "text-error"}`}
-    >
-      We couldn&rsquo;t send that. Please try again, or{" "}
-      <a href={mailto} className="underline">
-        email us your details
-      </a>
-      .
-    </p>
-  );
-}
-
 /** Honeypot field: hidden from people, irresistible to bots. */
 export function Honeypot({ inputRef }: { inputRef: Ref<HTMLInputElement> }) {
   return (

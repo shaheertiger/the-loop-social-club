@@ -30,49 +30,27 @@ placeholder address, hours and social links.
 ## Configuration
 
 `app/_lib/site.ts` holds the contact email, social links and the FormSubmit endpoint.
-The main page has two forms (see `app/_lib/leadForms.ts` for their fields):
+The main page has two forms, both delivered by [FormSubmit](https://formsubmit.co),
+which emails each submission to `site.email`:
 
 - **Founders List** (`FoundersForm`): name, email, phone, postal code, interests, pickleball level
 - **Join our team** (`CareersForm`): name, email, phone, roles, about
 
-Both post to the site's own `/api/lead` route (`app/api/lead/route.ts`), which
-validates the submission, writes it to the server log (visible under
-**Logs** in the Vercel dashboard, so no lead is ever lost) and emails it to
-`site.email`.
+On submit, the visitor goes straight to `/thank-you` while the submission is
+sent in the background (`submitLead` in `app/_lib/submitLead.ts`). Each
+submission is sent **once**:
 
-### Email delivery: set up Resend (do this once)
-
-The route emails leads through [Resend](https://resend.com). Until the key is
-set, the server can't send email and the forms fall back to FormSubmit from the
-browser, which has proven unreliable (it needs a per-domain activation and its
-bot protection blocks requests at random). To make delivery solid:
-
-1. Create a free Resend account **using play@theloopsocial.ca** (the free
-   `onboarding@resend.dev` sender may only email the account's own address).
-2. In Resend, create an API key.
-3. In the Vercel project, go to **Settings → Environment Variables** and add
-   `RESEND_API_KEY` with that key (all environments), then redeploy.
-
-Optional variables:
-
-- `LEAD_TO_EMAIL`: inbox to send leads to (default `site.email`).
-- `LEAD_FROM_EMAIL`: sender, e.g. `Loop Social <hello@theloopsocial.ca>`, once the
-  domain is verified in Resend. Default: `Loop Social <onboarding@resend.dev>`.
-
-### What the browser does
-
-`submitLead` (`app/_lib/submitLead.ts`) tries, in order:
-
-1. `POST /api/lead` on the same origin: no CORS, no activation, no third-party
-   bot checks in the visitor's browser.
-2. FormSubmit straight from the page (needs the domain activated once; FormSubmit
-   emails an **Activate Form** link on the first attempt).
-3. FormSubmit through a hidden iframe of `/submit-bridge` loaded from the
+1. Straight to FormSubmit from the page.
+2. Only if FormSubmit explicitly refuses it, because this domain isn't activated
+   yet, it goes through a hidden iframe of `/submit-bridge` loaded from the
    activated `vercel.app` address (`formBridge.origin`). The bridge only accepts
    messages from the site's own domains (`isAllowedParent`) and may only be
    embedded by them (`frame-ancestors` header in `next.config.ts`).
-4. If everything fails, the form shows a link that opens a pre-filled email to
-   `site.email`, so the visitor can still send their details.
+
+A slow or unreadable reply is never retried, since FormSubmit may already have
+sent the email. FormSubmit activates each site address separately: the first
+submission from a new domain makes it email an **Activate Form** link to the
+inbox. Click it once and that domain works from then on.
 
 ## Development
 

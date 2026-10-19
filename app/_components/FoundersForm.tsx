@@ -1,17 +1,17 @@
 "use client";
 
-import { useEffect, useRef, useState, type FormEvent } from "react";
+import { useRouter } from "next/navigation";
+import { useRef, useState, type FormEvent } from "react";
 import { site } from "../_lib/site";
-import { EMAIL_RE, leadMailto, submitLead } from "../_lib/submitLead";
+import { EMAIL_RE, submitLeadInBackground, thankYouUrl } from "../_lib/submitLead";
+import { markSubmitted, useAlreadySubmitted } from "../_lib/submitted";
 import {
   ChipGroup,
   FieldError,
   Honeypot,
-  SubmitError,
   borderClass,
   inputClass,
   labelClass,
-  outlineButtonClass,
   submitClass,
   toggleIn,
 } from "./formParts";
@@ -37,10 +37,11 @@ const SELECT_ARROW = {
 };
 const input = (hasError: boolean) => `h-12 ${inputClass[tone]} ${borderClass(tone, hasError)}`;
 
-type Status = "idle" | "loading" | "success";
+type Status = "idle" | "loading";
 
 /** The Founders List sign-up card (dark), from the Coming Soon design. */
 export function FoundersForm() {
+  const router = useRouter();
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -51,29 +52,10 @@ export function FoundersForm() {
   const [consent, setConsent] = useState(false);
   const [status, setStatus] = useState<Status>("idle");
   const [errors, setErrors] = useState<{ firstName?: string; email?: string; consent?: string }>({});
-  const [fallbackMailto, setFallbackMailto] = useState("");
   const honeypotRef = useRef<HTMLInputElement>(null);
-  const successHeadingRef = useRef<HTMLHeadingElement>(null);
+  const alreadySubmitted = useAlreadySubmitted("founders");
 
-  useEffect(() => {
-    if (status === "success") successHeadingRef.current?.focus();
-  }, [status]);
-
-  const reset = () => {
-    setFirstName("");
-    setLastName("");
-    setEmail("");
-    setPhone("");
-    setPostal("");
-    setPicks([]);
-    setLevel(LEVELS[0]);
-    setConsent(false);
-    setErrors({});
-    setFallbackMailto("");
-    setStatus("idle");
-  };
-
-  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
+  function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (status === "loading") return;
     const next = {
@@ -83,11 +65,11 @@ export function FoundersForm() {
     };
     setErrors(next);
     if (next.firstName || next.email || next.consent) return;
-    setFallbackMailto("");
+    setStatus("loading");
 
     // Bots fill the hidden field; quietly pretend it worked.
     if (honeypotRef.current?.value) {
-      setStatus("success");
+      router.push(thankYouUrl("founders", firstName));
       return;
     }
 
@@ -104,34 +86,27 @@ export function FoundersForm() {
       consent: "Yes: email (and text, if a number was given) about launch news, founding offers and events",
     };
 
-    setStatus("loading");
-    try {
-      await submitLead("founders", fields);
-      setStatus("success");
-    } catch {
-      setStatus("idle");
-      setFallbackMailto(leadMailto("founders", fields));
-    }
+    // Deliver in the background and show the thank-you page straight away.
+    submitLeadInBackground("founders", fields);
+    markSubmitted("founders");
+    router.push(thankYouUrl("founders", firstName));
   }
 
-  if (status === "success") {
+  if (alreadySubmitted && status === "idle") {
     return (
-      <div className="flex flex-col items-start gap-4 py-2" aria-live="polite">
-        <PickleballIcon size={56} className="animate-ls-pop" />
-        <h3
-          ref={successHeadingRef}
-          tabIndex={-1}
-          className="font-display text-[clamp(26px,4vw,32px)] leading-[1.05] font-extrabold tracking-[-0.02em] text-cream outline-none"
-        >
-          You&rsquo;re on the Founders List{firstName.trim() ? `, ${firstName.trim()}` : ""}.
+      <div className="flex flex-col items-start gap-4 py-2">
+        <PickleballIcon size={56} />
+        <h3 className="font-display text-[clamp(26px,4vw,32px)] leading-[1.05] font-extrabold tracking-[-0.02em] text-cream">
+          You&rsquo;re already on the Founders List.
         </h3>
         <p className="text-base leading-[1.55] text-pretty text-mist">
-          We&rsquo;ll email <strong className="text-cream">{email.trim()}</strong> first with founding
-          membership details, opening-week bookings and launch events.
+          We&rsquo;ve got your details and you&rsquo;ll hear from us first with founding membership details,
+          opening-week bookings and launch events. Need to change something? Email{" "}
+          <a href={`mailto:${site.email}`} className="text-cream underline">
+            {site.email}
+          </a>
+          .
         </p>
-        <button type="button" onClick={reset} className={`mt-1 ${outlineButtonClass[tone]}`}>
-          Add another person
-        </button>
       </div>
     );
   }
@@ -293,7 +268,6 @@ export function FoundersForm() {
       <button type="submit" disabled={loading} aria-busy={loading} className={submitClass[tone]}>
         {loading ? "Sending…" : "Claim my founding spot"}
       </button>
-      {fallbackMailto && <SubmitError tone={tone} mailto={fallbackMailto} />}
       <p className="text-center text-xs text-mist">
         Loop Social · South Ajax, ON ·{" "}
         <a href={`mailto:${site.email}`} className="text-cream underline">

@@ -9,46 +9,20 @@ export type LeadResult = { type: "lead-result"; id: string; ok: boolean; rejecte
 const BRIDGE_LOAD_TIMEOUT = 15_000;
 const SUBMIT_TIMEOUT = 45_000;
 const FETCH_TIMEOUT = 30_000;
-const API_TIMEOUT = 40_000;
 
 /**
- * A delivery attempt that definitely sent nothing, so another path may safely
- * try. Any other error is ambiguous: the request went out and the email may
- * already be on its way, so retrying would send it twice.
+ * FormSubmit definitely sent nothing (e.g. "This form needs Activation"), so
+ * the bridge may safely try. Any other error is ambiguous: the request went
+ * out and the email may be on its way, so retrying would send it twice.
  */
 export class LeadRejected extends Error {}
 
-/** Whether a fetch error means the request never left the browser. */
-const neverSent = (err: unknown) => err instanceof TypeError;
-
-/** Posts a submission to the site's own /api/lead route. */
-async function deliverToApi(form: LeadForm, fields: Record<string, string>) {
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), API_TIMEOUT);
-  try {
-    let res: Response;
-    try {
-      res = await fetch("/api/lead", {
-        method: "POST",
-        headers: { "Content-Type": "application/json", Accept: "application/json" },
-        body: JSON.stringify({ form, fields }),
-        signal: controller.signal,
-      });
-    } catch (err) {
-      if (neverSent(err)) throw new LeadRejected("Could not reach /api/lead");
-      throw err;
-    }
-    const data = (await res.json().catch(() => null)) as { ok?: boolean; retryable?: boolean; error?: string } | null;
-    if (res.ok && data?.ok) return;
-    const message = `/api/lead rejected the submission (${res.status}): ${data?.error ?? "no message"}`;
-    if (res.status === 400 || data?.retryable) throw new LeadRejected(message);
-    throw new Error(message);
-  } finally {
-    clearTimeout(timer);
-  }
-}
-
-/** Posts a submission to FormSubmit from the current page. */
+/**
+ * Posts a submission to FormSubmit from the current page.
+ *
+ * Sent as a plain form post (no CORS preflight) with keepalive, so it still
+ * completes if the visitor leaves the page.
+ */
 export async function deliverToFormSubmit(subject: string, fields: Record<string, string>) {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), FETCH_TIMEOUT);
@@ -57,20 +31,20 @@ export async function deliverToFormSubmit(subject: string, fields: Record<string
     try {
       res = await fetch(site.signupEndpoint, {
         method: "POST",
-        headers: { "Content-Type": "application/json", Accept: "application/json" },
-        body: JSON.stringify({ ...fields, _subject: subject, _template: "table" }),
+        headers: { Accept: "application/json" },
+        body: new URLSearchParams({ ...fields, _subject: subject, _template: "table", _captcha: "false" }),
         signal: controller.signal,
+        keepalive: true,
       });
     } catch (err) {
-      if (neverSent(err)) throw new LeadRejected("Could not reach FormSubmit");
+      // A TypeError means the request never got a connection.
+      if (err instanceof TypeError) throw new LeadRejected("Could not reach FormSubmit");
       throw err;
     }
     const data = (await res.json().catch(() => null)) as { success?: string | boolean; message?: string } | null;
     if (String(data?.success) === "true") return;
     const message = `FormSubmit rejected the submission (${res.status}): ${data?.message ?? "no message"}`;
-    // An explicit "false" (e.g. "needs activation") sent nothing. Anything else
-    // (a Cloudflare page, an empty body) may still have been delivered.
-    if (String(data?.success) === "false" || res.status === 403 || res.status === 429) throw new LeadRejected(message);
+    if (String(data?.success) === "false") throw new LeadRejected(message);
     throw new Error(message);
   } finally {
     clearTimeout(timer);
@@ -111,59 +85,37 @@ function loadBridge(): Promise<Window> {
 }
 
 /**
- * Sends a form submission to the signup inbox, exactly once.
+ * Sends a form submission to FormSubmit, exactly once.
  *
- * Tries, in order, moving on only when the previous path definitely sent
- * nothing (LeadRejected):
- *   1. The site's own /api/lead route (same origin, so no CORS, no per-domain
- *      activation and no third-party bot checks in the browser). It logs the
- *      lead and emails it from the server; see app/api/lead/route.ts.
- *   2. FormSubmit straight from this page.
- *   3. FormSubmit through the bridge iframe on the activated vercel.app address.
- *
- * Resolves when a path delivered, or when a path's outcome is unknown (the
- * request went out but the reply was unreadable or timed out). Retrying in
- * that case sends duplicate emails, and the lead is already in the server log.
- * Throws LeadRejected only when every path definitely failed.
+ * Posts straight from this page. Only if FormSubmit explicitly refuses it
+ * (the domain isn't activated yet) does it go through the bridge iframe on the
+ * activated vercel.app address instead. A slow or unreadable reply is never
+ * retried, since FormSubmit may already have sent the email.
  */
 export async function submitLead(form: LeadForm, fields: Record<string, string>) {
   const subject = LEAD_FORMS[form].subject;
-
-  const attempts: Array<[string, () => Promise<void>]> = [["/api/lead", () => deliverToApi(form, fields)]];
-  if (window.location.origin === formBridge.origin) {
-    // On the activated address itself there is nothing to bridge.
-    attempts.push(["FormSubmit", () => deliverToFormSubmit(subject, fields)]);
-  } else {
-    attempts.push(
-      ["FormSubmit", () => deliverToFormSubmit(subject, fields)],
-      ["bridge", async () => submitViaBridge(await loadBridge(), subject, fields)],
-    );
+  try {
+    return await deliverToFormSubmit(subject, fields);
+  } catch (err) {
+    if (!(err instanceof LeadRejected) || window.location.origin === formBridge.origin) throw err;
+    console.warn("FormSubmit refused the submission from this address, trying the bridge.", err);
   }
-
-  let lastError: unknown;
-  for (const [name, attempt] of attempts) {
-    try {
-      return await attempt();
-    } catch (err) {
-      lastError = err;
-      if (!(err instanceof LeadRejected)) {
-        console.warn(`${name}: outcome unknown, assuming delivered to avoid a duplicate.`, err);
-        return;
-      }
-      console.warn(`${name} did not accept the submission.`, err);
-    }
-  }
-  throw lastError;
+  await submitViaBridge(await loadBridge(), subject, fields);
 }
 
-/** Builds a mailto: link holding the submission, for when delivery fails. */
-export function leadMailto(form: LeadForm, fields: Record<string, string>) {
-  const subject = LEAD_FORMS[form].subject;
-  const body = Object.entries(fields)
-    .filter(([, value]) => value)
-    .map(([key, value]) => `${key.replace(/_/g, " ")}: ${value}`)
-    .join("\n");
-  return `mailto:${site.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+/**
+ * Sends a submission in the background. The forms show the thank-you page
+ * straight away instead of making the visitor wait on FormSubmit.
+ */
+export function submitLeadInBackground(form: LeadForm, fields: Record<string, string>) {
+  submitLead(form, fields).catch((err) => console.error("Form submission was not delivered.", err));
+}
+
+/** Where to send the visitor once they've submitted. */
+export function thankYouUrl(form: LeadForm, name: string) {
+  const query = new URLSearchParams({ form });
+  if (name.trim()) query.set("name", name.trim());
+  return `/thank-you?${query}`;
 }
 
 /** Sends a submission through the bridge iframe and waits for its reply. */
@@ -182,8 +134,7 @@ function submitViaBridge(target: Window, subject: string, fields: Record<string,
       window.clearTimeout(timer);
       window.removeEventListener("message", onMessage);
       if (event.data.ok) resolve();
-      else if (event.data.rejected) reject(new LeadRejected("Bridge submission rejected"));
-      else reject(new Error("Bridge submission outcome unknown"));
+      else reject(new Error(event.data.rejected ? "Bridge submission rejected" : "Bridge submission outcome unknown"));
     }
 
     window.addEventListener("message", onMessage);

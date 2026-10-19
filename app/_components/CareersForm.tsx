@@ -1,12 +1,14 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState, type FormEvent } from "react";
-import { EMAIL_RE, leadMailto, submitLead } from "../_lib/submitLead";
+import { site } from "../_lib/site";
+import { EMAIL_RE, submitLeadInBackground, thankYouUrl } from "../_lib/submitLead";
+import { markSubmitted, useAlreadySubmitted } from "../_lib/submitted";
 import {
   ChipGroup,
   FieldError,
   Honeypot,
-  SubmitError,
   borderClass,
   inputClass,
   labelClass,
@@ -20,10 +22,11 @@ const ROLES = ["Pickleball coach", "Cricket coach", "Front desk", "Café crew", 
 const tone = "light";
 const input = (hasError: boolean) => `h-12 ${inputClass[tone]} ${borderClass(tone, hasError)}`;
 
-type Status = "closed" | "open" | "loading" | "success";
+type Status = "closed" | "open" | "loading";
 
 /** "See open roles" button that opens a short job-interest form. */
 export function CareersForm() {
+  const router = useRouter();
   const [status, setStatus] = useState<Status>("closed");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -32,17 +35,15 @@ export function CareersForm() {
   const [about, setAbout] = useState("");
   const [nameError, setNameError] = useState("");
   const [emailError, setEmailError] = useState("");
-  const [fallbackMailto, setFallbackMailto] = useState("");
   const honeypotRef = useRef<HTMLInputElement>(null);
   const firstFieldRef = useRef<HTMLInputElement>(null);
-  const successRef = useRef<HTMLParagraphElement>(null);
+  const alreadySubmitted = useAlreadySubmitted("careers");
 
   useEffect(() => {
     if (status === "open") firstFieldRef.current?.focus();
-    if (status === "success") successRef.current?.focus();
   }, [status]);
 
-  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
+  function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (status === "loading") return;
     const nameOk = name.trim() !== "";
@@ -50,10 +51,11 @@ export function CareersForm() {
     setNameError(nameOk ? "" : "Please enter your name.");
     setEmailError(emailOk ? "" : "Please enter a valid email address.");
     if (!nameOk || !emailOk) return;
-    setFallbackMailto("");
+    setStatus("loading");
+    const firstName = name.trim().split(/\s+/)[0];
 
     if (honeypotRef.current?.value) {
-      setStatus("success");
+      router.push(thankYouUrl("careers", firstName));
       return;
     }
 
@@ -66,14 +68,22 @@ export function CareersForm() {
       about: about.trim(),
     };
 
-    setStatus("loading");
-    try {
-      await submitLead("careers", fields);
-      setStatus("success");
-    } catch {
-      setStatus("open");
-      setFallbackMailto(leadMailto("careers", fields));
-    }
+    // Deliver in the background and show the thank-you page straight away.
+    submitLeadInBackground("careers", fields);
+    markSubmitted("careers");
+    router.push(thankYouUrl("careers", firstName));
+  }
+
+  if (alreadySubmitted && status !== "loading") {
+    return (
+      <p className="basis-full text-base leading-[1.5] text-navy-deep md:basis-auto">
+        Thanks, we&rsquo;ve got your details and will be in touch. To update them, email{" "}
+        <a href={`mailto:${site.email}`} className="underline">
+          {site.email}
+        </a>
+        .
+      </p>
+    );
   }
 
   if (status === "closed") {
@@ -86,20 +96,6 @@ export function CareersForm() {
       >
         See open roles
       </button>
-    );
-  }
-
-  if (status === "success") {
-    const firstName = name.trim().split(/\s+/)[0];
-    return (
-      <p
-        ref={successRef}
-        tabIndex={-1}
-        aria-live="polite"
-        className="basis-full font-display text-xl leading-[1.3] font-bold text-navy-deep outline-none"
-      >
-        Thanks{firstName ? `, ${firstName}` : ""}. We&rsquo;ll be in touch about joining the team.
-      </p>
     );
   }
 
@@ -209,7 +205,6 @@ export function CareersForm() {
           <button type="submit" disabled={loading} aria-busy={loading} className={`md:max-w-[280px] ${submitClass[tone]}`}>
             {loading ? "Sending…" : "Send application"}
           </button>
-          {fallbackMailto && <SubmitError tone={tone} mailto={fallbackMailto} />}
         </div>
       </form>
     </div>
