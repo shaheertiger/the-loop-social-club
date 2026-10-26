@@ -74,7 +74,31 @@ export default async function ThankYouPage({ searchParams }: PageProps<"/thank-y
       </main>
 
       <footer className="bg-navy-deep">
-        <div className={`${container} py-5 text-xs text-mist`}>© 2026 Loop Social · South Ajax, Ontario</div>
+        <div className={`${container} flex flex-wrap justify-between gap-x-6 gap-y-2 py-5 text-xs text-mist`}>
+          <span>© 2026 Loop Social · South Ajax, Ontario</span>
+          <div className="flex gap-5">
+            {site.instagramUrl && (
+              <a
+                href={site.instagramUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-cream underline underline-offset-4 hover:text-white"
+              >
+                Instagram
+              </a>
+            )}
+            {site.facebookUrl && (
+              <a
+                href={site.facebookUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-cream underline underline-offset-4 hover:text-white"
+              >
+                Facebook
+              </a>
+            )}
+          </div>
+        </div>
       </footer>
     </div>
   );
