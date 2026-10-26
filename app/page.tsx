@@ -425,8 +425,23 @@ export default function ComingSoon() {
               {site.email}
             </a>
             {site.instagramUrl && (
-              <a href={site.instagramUrl} className="text-cream underline underline-offset-4 hover:text-white">
+              <a
+                href={site.instagramUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-cream underline underline-offset-4 hover:text-white"
+              >
                 Instagram
+              </a>
+            )}
+            {site.facebookUrl && (
+              <a
+                href={site.facebookUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-cream underline underline-offset-4 hover:text-white"
+              >
+                Facebook
               </a>
             )}
           </div>

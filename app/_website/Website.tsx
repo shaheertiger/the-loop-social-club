@@ -42,6 +42,7 @@ const DAY = [
 
 const SOCIAL = [
   { label: "Instagram", href: site.instagramUrl },
+  { label: "Facebook", href: site.facebookUrl },
   { label: "TikTok", href: site.tiktokUrl },
 ].filter((s) => s.href);
 
@@ -315,7 +316,7 @@ export function Website() {
             {SOCIAL.length > 0 && (
               <div className="flex flex-wrap gap-5">
                 {SOCIAL.map((s) => (
-                  <a key={s.label} href={s.href} className="text-cream underline">
+                  <a key={s.label} href={s.href} target="_blank" rel="noopener noreferrer" className="text-cream underline">
                     {s.label}
                   </a>
                 ))}

@@ -2,7 +2,8 @@
 export const site = {
   email: "play@theloopsocial.ca",
   // Leave empty to hide the link until the real profile URL is known.
-  instagramUrl: "",
+  instagramUrl: "https://www.instagram.com/theloopsocial.ca/",
+  facebookUrl: "https://www.facebook.com/profile.php?id=61595213252101",
   tiktokUrl: "",
   // Where form submissions are delivered (FormSubmit AJAX endpoint).
   signupEndpoint: "https://formsubmit.co/ajax/play@theloopsocial.ca",
